@@ -143,7 +143,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     $.ajax({
 
       // url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq  + ${this.props.userId}`,
-      url: `https://tmxin.sharepoint.com/sites/lms/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
+      url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
 
       type: "GET",
 
@@ -347,7 +347,12 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
 
 
     //  this.loadTable();
-
+    $(document).on('click', '#permission-dashboard', () => {
+      this.setState({
+        PermissionDashboard: true,
+        PermissionRequest: false
+      })
+    })
 
   }
   public GetPermissionDetails() {

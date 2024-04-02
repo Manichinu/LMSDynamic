@@ -33,7 +33,7 @@ import LeaveMgmt from './LeaveMgmt';
 import Holiday from './Holiday';
 import PermissionDashboard from './PermissionDashboard';
 import PermissionRequest from './PermissionRequest';
-
+import Aboutus from './Aboutus';
 
 
 var AttachmentCopies = [];
@@ -599,7 +599,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     $.ajax({
 
       // url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq  + ${this.props.userId}`,
-      url: `https://tmxin.sharepoint.com/sites/lms/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
+      url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
 
       type: "GET",
 
@@ -1908,7 +1908,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
             <li className={this.state.LeaveMgmtDashboard == true ? "active" : ""} onClick={() => this.showLeaveMgmtDashboard()}>Home  </li>
             <li className={this.state.AboutUs == true ? "active" : ""} onClick={() => this.showAboutus()}> About  </li>
             <li className={this.state.Holiday == true ? "active" : ""} onClick={() => this.showHoliday()}> Holidays  </li>
-            <li className={this.state.PermissionDashboard == true ? "active" : ""} onClick={() => this.showPermissionDashboard()}> Permission  </li>
+            <li className={this.state.PermissionDashboard == true ? "active" : ""} onClick={() => this.showPermissionDashboard()} id='permission-dashboard'> Permission  </li>
           </ul>
         </nav>
         {this.state.LeaveMgmtDashboard == true &&
@@ -2114,6 +2114,10 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         }
         {this.state.PermissionRequest == true &&
           <PermissionRequest description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+
+        }
+        {this.state.AboutUs == true &&
+          <Aboutus description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
       </>
