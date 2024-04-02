@@ -58,6 +58,8 @@ var SpecificDate: any;
 
 // const NewWeb = Web('${this.props.siteurl}/');
 var NewWeb: any;
+let progressEndValue = 100;
+let overAllValue = 0;
 
 export interface LeaveMgmtDashboardState {
   DatatableItems: any[];
@@ -76,6 +78,7 @@ export interface LeaveMgmtDashboardState {
   PermissionDashboard: boolean;
   PermissionRequest: boolean;
   AboutUs: boolean;
+  Configure: boolean;
 }
 
 export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashboardProps, LeaveMgmtDashboardState> {
@@ -125,12 +128,13 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       CurrentUserId: null,
       LeaveBalanceItems: [],
       Empemail: "",
-      LeaveMgmtDashboard: true,
+      LeaveMgmtDashboard: false,
       Holiday: false,
       LeaveMgmt: false,
       PermissionDashboard: false,
       PermissionRequest: false,
       AboutUs: false,
+      Configure: false,
     };
     NewWeb = Web("" + this.props.siteurl + "")
 
@@ -179,7 +183,10 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
   public async componentDidMount() {
 
     this.GetCurrentUserDetails();
-    this.checkIfListExists();
+    this.checkConfiguredOrNot()
+    // this.checkIfListExists();
+    // this.createSitePage();
+    // this.createGroup();
     // this.createLeaveRequestList();
     // this.createLeaveCancellationHistoryList();
     // this.createEmployeePermissionList();
@@ -202,6 +209,39 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     //await this.GetListitems();
 
   }
+  public async checkConfiguredOrNot() {
+    NewWeb.lists.getByTitle("Configure Master").items.get().then((items: any) => {
+      if (items.length != 0) {
+        this.setState({
+          LeaveMgmtDashboard: true
+        })
+        $("#header-section").show()
+      }
+    }).catch((error: any) => {
+      this.setState({
+        Configure: true,
+      })
+      console.error("An error occurred:", error);
+    });
+  }
+  public async createAllDynamicLists() {
+    try {
+      $("#configure").hide();
+      $(".progress_container").show();
+      await this.configureListCreation();
+      await this.createSitePage();
+      await this.createGroup();
+      await this.createLeaveRequestList();
+      await this.createLeaveCancellationHistoryList();
+      await this.createEmployeePermissionList();
+      await this.createBalanceCollectionList();
+      await this.createHolidayCollectionList();
+      await this.createLeaveTypeCollectionList();
+
+    } catch (error) {
+      console.error("Error configuring lists:", error);
+    }
+  }
   public async checkIfListExists() {
     try {
       // Retrieve all lists from the site
@@ -216,6 +256,33 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         }
       })
 
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  public async createSitePage() {
+    try {
+      // Create a new client side page
+      var pageTitle = "LeaveManagement"
+      const page = await sp.web.addClientsidePage(pageTitle, "Page Title", "Article");;
+      // Set the content of the page
+      // await page.save(pageContent);
+      console.log(`Site Page "${pageTitle}" created successfully.`);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+  public async createGroup() {
+    var groupName = "LMS Admin";
+    var groupDescription = "Description"
+    try {
+      // Create a new group
+      await sp.web.siteGroups.add({
+        Title: groupName,
+        Description: groupDescription
+      });
+
+      console.log(`Group "${groupName}" created successfully.`);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -250,6 +317,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "MultiLine") {
@@ -259,12 +328,16 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "Number") {
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
       })
@@ -306,6 +379,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "MultiLine") {
@@ -315,12 +390,16 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "Number") {
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
       })
@@ -358,6 +437,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "MultiLine") {
@@ -367,12 +448,16 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "Number") {
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
       })
@@ -425,6 +510,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "MultiLine") {
@@ -434,17 +521,23 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "Number") {
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "Calculated") {
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addCalculated(item.Name)
             .then(async () => {
+              const progress = (1 * 100 / 74);
+              this.updateProgress(progress);
               // NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
               // NewWeb.lists.getByTitle(ListName).fields.getByTitle(item.Name).update({ Formula: item.Formula },);
               await Promise.all([
@@ -459,6 +552,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addUser(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
       })
@@ -487,12 +582,16 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "Date") {
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addDateTime(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
 
@@ -521,6 +620,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
         else if (item.Type == "MultiLine") {
@@ -530,6 +631,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 74);
+            this.updateProgress(progress);
           })
         }
       })
@@ -540,6 +643,34 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         console.log("Error in batch operations for creating " + ListName + " list: " + error);
       });
     })
+  }
+  public async configureListCreation() {
+    try {
+      const listTitle = "Configure Master";
+      const listDescription = "Form Template";
+      NewWeb.lists.add(listTitle, listDescription, 100, false).then(() => {
+        console.log(`${listTitle} List created successfully`);
+        NewWeb.lists.getByTitle(listTitle).items.add({
+          Title: "Configured"
+        })
+      });
+    } catch (error) {
+      console.error("Error creating list:", error);
+    }
+  }
+  public updateProgress(value: any) {
+    overAllValue += value;
+    console.log("Progress", overAllValue)
+    if (overAllValue >= progressEndValue) {
+      $(".progress-value").text(`100%`);
+      Swal.fire('Configured successfully!', '', 'success').then(() => {
+        location.reload();
+      })
+      $(".progress_container").hide();
+    } else {
+      $(".progress-value").text(`${Math.ceil(overAllValue)}%`);
+      $(".circular-progress").css("background", `conic-gradient(#7d2ae8 ${Math.ceil(overAllValue) * 3.6}deg, #ededed 0deg)`);
+    }
   }
   public Checkuserexists() {
     if (this.checkUserInGroup("LMS Admin")) {
@@ -1886,31 +2017,43 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     });
     return (
       <>
-        <header>
-          <div className="clearfix container-new">
-            <div className="logo">
-              <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/logo_small.png`} alt="image" />
+        {this.state.Configure == true &&
+          <div className='config'>
+            <div className="progress_container" style={{ display: "none" }}>
+              <div className="circular-progress">
+                <span className="progress-value">0%</span>
+              </div>
             </div>
-            <div className="header-title"><h3>Leave Management System</h3></div>
-            <div className="notification-part">
-              <ul>
-                <li className="person-details">
-                  {/*<span id="CurrentUser-Profilepicture"> <img src={`${this.state.CurrentUserProfilePic}`} alt="image" /> <span>  </span>  </span>*/}
-                  <span id="CurrentUser-displayname">{this.state.CurrentUserName}</span>
-                  <a href="#" onClick={this.logout}><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/logout.png`} /></a>
-                </li>
-              </ul>
-            </div>
+            <button type="button" id='configure' className="btn btn-primary" onClick={() => this.createAllDynamicLists()} >Click here to Configure</button>
           </div>
-        </header>
-        <nav>
-          <ul>
-            <li className={this.state.LeaveMgmtDashboard == true ? "active" : ""} onClick={() => this.showLeaveMgmtDashboard()}>Home  </li>
-            <li className={this.state.AboutUs == true ? "active" : ""} onClick={() => this.showAboutus()}> About  </li>
-            <li className={this.state.Holiday == true ? "active" : ""} onClick={() => this.showHoliday()}> Holidays  </li>
-            <li className={this.state.PermissionDashboard == true ? "active" : ""} onClick={() => this.showPermissionDashboard()} id='permission-dashboard'> Permission  </li>
-          </ul>
-        </nav>
+        }
+        <div id='header-section' style={{ display: "none" }}>
+          <header>
+            <div className="clearfix container-new">
+              <div className="logo">
+                <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/logo_small.png`} alt="image" />
+              </div>
+              <div className="header-title"><h3>Leave Management System</h3></div>
+              <div className="notification-part">
+                <ul>
+                  <li className="person-details">
+                    {/*<span id="CurrentUser-Profilepicture"> <img src={`${this.state.CurrentUserProfilePic}`} alt="image" /> <span>  </span>  </span>*/}
+                    <span id="CurrentUser-displayname">{this.state.CurrentUserName}</span>
+                    <a href="#" onClick={this.logout}><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/logout.png`} /></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </header>
+          <nav>
+            <ul>
+              <li className={this.state.LeaveMgmtDashboard == true ? "active" : ""} onClick={() => this.showLeaveMgmtDashboard()}>Home  </li>
+              <li className={this.state.AboutUs == true ? "active" : ""} onClick={() => this.showAboutus()}> About  </li>
+              <li className={this.state.Holiday == true ? "active" : ""} onClick={() => this.showHoliday()}> Holidays  </li>
+              <li className={this.state.PermissionDashboard == true ? "active" : ""} onClick={() => this.showPermissionDashboard()} id='permission-dashboard'> Permission  </li>
+            </ul>
+          </nav>
+        </div>
         {this.state.LeaveMgmtDashboard == true &&
           <div className={styles.leaveMgmtDashboard} >
             <div className="container">
