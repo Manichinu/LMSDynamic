@@ -17,6 +17,7 @@ import { IAttachmentFileInfo, IItemAddResult, Web } from "@pnp/sp/presets/all";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/attachments";
+import "../css/style.css"
 
 let NewWeb = Web("https://tmxin.sharepoint.com/sites/ER/");
 let datesCollection: string[] = [];
@@ -63,9 +64,9 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.js`
     );
 
-    SPComponentLoader.loadCss(
-      `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-    );
+    // SPComponentLoader.loadCss(
+    //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
+    // );
     this.state = {
 
       startDate: new Date(),
@@ -481,13 +482,13 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
   public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
 
     return (
-      <div className={styles.permissionRequest} >     
+      <div className={styles.permissionRequest} >
 
         <div className="container">
           <div className="dashboard-wrap">
 
             <div className="form-header">
-              <a href=""><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/back.svg`} alt="image" /> </a> <span> Permission Request </span>
+              <a href=""><img src={require("../img/back.svg")} alt="image" /> </a> <span> Permission Request </span>
             </div>
 
             <div className="form-body">

@@ -9,6 +9,8 @@ import "@pnp/sp/site-users/web";
 import * as $ from 'jquery';
 import * as moment from "moment";
 import { _SiteGroups } from '@pnp/sp/site-groups/types';
+import "../css/style.css"
+
 // const NewWeb = Web('https://tmxin.sharepoint.com/sites/ER/');
 let ItemId;
 let NewWeb: any;
@@ -41,9 +43,9 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
     SPComponentLoader.loadScript(
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.js`
     );
-    SPComponentLoader.loadCss(
-      `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-    );
+    // SPComponentLoader.loadCss(
+    //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
+    // );
 
     this.state = {
       HolidayItems: [],

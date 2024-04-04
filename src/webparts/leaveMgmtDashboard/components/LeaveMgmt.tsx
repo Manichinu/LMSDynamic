@@ -21,6 +21,7 @@ import * as moment from "moment";
 import { _Items } from '@pnp/sp/items/types';
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
+import "../css/style.css"
 
 
 var AttachmentURL = "";
@@ -106,9 +107,9 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         );
 
 
-        SPComponentLoader.loadCss(
-            `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-        );
+        // SPComponentLoader.loadCss(
+        //     `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
+        // );
 
 
 
@@ -1672,15 +1673,15 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
             var Icon = "";
             if (Ext == "PDF") {
-                Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/pdf.svg`;
+                Icon = `${require("../img/pdf.svg")}`;
             } else if (Ext == "JPG" || Ext == "JPEG" || Ext == "PNG" || Ext == "GIF" || Ext == "SVG") {
-                Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/pdf.svg`;
+                Icon = `${require("../img/pdf.svg")}`;
             } else if (Ext == "DOCX" || Ext == "DOC") {
-                Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/docx.svg`;
+                Icon = `${require("../img/docx.svg")}`;
             } else if (Ext == "XLSX" || Ext == "XLS") {
-                Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/xlsx.svg`;
+                Icon = `${require("../img/xlsx.svg")}`;
             } else if (Ext == "PPTX") {
-                Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/pptx.svg`;
+                Icon = `${require("../img/pptx.svg")}`;
             }
             return (
                 <div className="file-img upload-img">
@@ -1688,19 +1689,19 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                         <li><img src={`${Icon}`} alt="image" className="attachment-img" /> </li>
                         <li className="word-data"><p className="asset-info-header">{item.name}</p><p></p></li>
                     </ul>
-                    <div className="close-doc-img"><a href="#" onClick={() => handler.DeleteAttachment(item.name)}><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/close (3).png`} alt="close-icon" className="close-image" /></a></div>
+                    <div className="close-doc-img"><a href="#" onClick={() => handler.DeleteAttachment(item.name)}><img src={require("../img/close (3).png")} alt="close-icon" className="close-image" /></a></div>
                 </div>
             );
         });
 
         return (
-            <div className={styles.leaveMgmt} >              
+            <div className={styles.leaveMgmt} >
 
                 <div className="container">
                     <div className="dashboard-wrap">
 
                         <div className="form-header">
-                            <a href=""><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/back.svg`} alt="image" /></a><span> Leave Request</span>
+                            <a href=""><img src={require("../img/back.svg")} alt="image" /></a><span> Leave Request</span>
                         </div>
 
                         <div className="form-body">
@@ -1836,7 +1837,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                             <ReactFileReader id="leave-file-upload" className="leave-file-upload" multipleFiles={false} fileTypes={[".csv", ".xlsx", ".Docx", ".pdf", ".png", ".jpeg", ".jpg", ".svg"]} base64={true}
                                                 handleFiles={(f: any) => this.handleFiles(f)}  >
                                                 <label htmlFor="leave-file-upload" className="img-upload" id='files'>
-                                                    <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/upload.png`} className="upload_file" />
+                                                    <img src={require("../img/upload.png")} className="upload_file" />
                                                     <h5>Choose an file. </h5>
 
                                                 </label>

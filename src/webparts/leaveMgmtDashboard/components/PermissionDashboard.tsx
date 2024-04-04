@@ -20,6 +20,8 @@ import swal from "sweetalert";
 
 import * as moment from 'moment';
 import PermissionRequest from './PermissionRequest';
+import "../css/style.css"
+
 let ItemId;
 var CurrentUSERNAME = "";
 var Usertype = "";
@@ -70,9 +72,9 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
     );
 
-    SPComponentLoader.loadCss(
-      `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-    );
+    // SPComponentLoader.loadCss(
+    //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
+    // );
 
 
     sp.setup({
@@ -611,7 +613,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
                 {(handler.state.Empemail == item.EmployeeEmail && item.Status != "Cancelled" && item.Status != "Rejected" && moment(item.timefromwhen, "DD-MM-YYYY hh:mm A").isSameOrAfter(moment(), 'day')) &&
 
 
-                  <p onClick={() => handler.Cancel_Request_(item.Id)}><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/cancel.svg`} alt="image" /></p>
+                  <p onClick={() => handler.Cancel_Request_(item.Id)}><img src={require("../img/cancel.svg")} alt="image" /></p>
                 }
 
               </>

@@ -17,6 +17,7 @@ import "@pnp/sp/items";
 import "@pnp/sp/site-users/web";
 import * as $ from 'jquery';
 import swal from "sweetalert";
+import "../css/style.css"
 
 import * as moment from 'moment';
 import PermissionRequest from './PermissionRequest';
@@ -60,9 +61,9 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
             `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
         );
 
-        SPComponentLoader.loadCss(
-            `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-        );
+        // SPComponentLoader.loadCss(
+        //     `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
+        // );
         SPComponentLoader.loadScript(
             `https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js`
         );

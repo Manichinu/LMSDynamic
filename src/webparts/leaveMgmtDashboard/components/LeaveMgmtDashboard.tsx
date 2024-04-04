@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './LeaveMgmtDashboard.module.scss';
+// import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
 import { ILeaveMgmtDashboardState } from './ILeaveMgmtDashboardState';
 import { escape } from '@microsoft/sp-lodash-subset';
@@ -34,7 +34,7 @@ import Holiday from './Holiday';
 import PermissionDashboard from './PermissionDashboard';
 import PermissionRequest from './PermissionRequest';
 import Aboutus from './Aboutus';
-
+import "../css/style"
 
 var AttachmentCopies = [];
 var spfxdatatable = null;
@@ -107,9 +107,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
     );
 
-    SPComponentLoader.loadCss(
-      `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-    );
+    // SPComponentLoader.loadCss(
+    //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
+    // );
 
 
     sp.setup({
@@ -180,10 +180,15 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     });
 
   }
+
   public async componentDidMount() {
 
     this.GetCurrentUserDetails();
-    this.checkConfiguredOrNot()
+    this.checkConfiguredOrNot();
+    // NewWeb.lists.getByTitle("BalanceCollection").fields.addCalculated("My Field", {
+    //   Formula: "=1+1",
+    //   Group: "MyGroup"
+    // });
     // this.checkIfListExists();
     // this.createSitePage();
     // this.createGroup();
@@ -1999,13 +2004,13 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                 {((item.Days <= 1) && handler.state.Empemail == item.EmployeeEmail && item.Status != "Cancelled" && item.Status != "Rejected" && moment(item.EndDate, "YYYY-MM-DD").isAfter(moment(), 'day')) &&
 
 
-                  <p onClick={() => handler.Cancel_Request_(item.Id, item.Days, item.StartDate, item.EndDate, item.LeaveType, item.Status, item)}><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/cancel.svg`} alt="image" /></p>
+                  <p onClick={() => handler.Cancel_Request_(item.Id, item.Days, item.StartDate, item.EndDate, item.LeaveType, item.Status, item)}><img src={require("../img/cancel.svg")} alt="image" /></p>
                 }
 
                 {((item.Days > 1) && handler.state.Empemail == item.EmployeeEmail && item.Status != "Cancelled" && item.Status != "Rejected" && moment(item.EndDate, "YYYY-MM-DD").isAfter(moment(), 'day')) &&
 
 
-                  <p onClick={() => handler.Cancel_Request_or_change_LeaveDate(item.Id, item.Days, item.StartDate, item.EndDate, item.LeaveType, item.Status, item)}> <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/cancel.svg`} alt="image" /></p>
+                  <p onClick={() => handler.Cancel_Request_or_change_LeaveDate(item.Id, item.Days, item.StartDate, item.EndDate, item.LeaveType, item.Status, item)}> <img src={require("../img/cancel.svg")} alt="image" /></p>
                 }
 
               </>
@@ -2031,7 +2036,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           <header>
             <div className="clearfix container-new">
               <div className="logo">
-                <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/logo_small.png`} alt="image" />
+                <img src={require("../img/logo_small.png")} alt="image" />
               </div>
               <div className="header-title"><h3>Leave Management System</h3></div>
               <div className="notification-part">
@@ -2039,7 +2044,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                   <li className="person-details">
                     {/*<span id="CurrentUser-Profilepicture"> <img src={`${this.state.CurrentUserProfilePic}`} alt="image" /> <span>  </span>  </span>*/}
                     <span id="CurrentUser-displayname">{this.state.CurrentUserName}</span>
-                    <a href="#" onClick={this.logout}><img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/logout.png`} /></a>
+                    <a href="#" onClick={this.logout}><img src={require("../img/logout.png")} /></a>
                   </li>
                 </ul>
               </div>
@@ -2055,7 +2060,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           </nav>
         </div>
         {this.state.LeaveMgmtDashboard == true &&
-          <div className={styles.leaveMgmtDashboard} >
+          <div>
             <div className="container">
               <div className="dashboard-wrap">
                 {/* <div>
@@ -2085,7 +2090,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/approved.png`} alt="image" />
+                              <img src={require("../img/approved.png")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
@@ -2099,7 +2104,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/pending.png`} alt="image" />
+                              <img src={require("../img/pending.png")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
@@ -2114,7 +2119,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/sick leave.svg`} alt="image" />
+                              <img src={require("../img/sick leave.svg")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
@@ -2126,7 +2131,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/maternity.svg`} alt="image" />
+                              <img src={require("../img/maternity.svg")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
@@ -2138,7 +2143,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/paternity leave.svg`} alt="image" />
+                              <img src={require("../img/paternity leave.svg")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
@@ -2150,7 +2155,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={`${this.props.siteurl}/SiteAssets/LeavePortal/img/other leave.svg`} alt="image" />
+                              <img src={require("../img/other leave.svg")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
