@@ -22,6 +22,8 @@ import * as moment from 'moment';
 import PermissionRequest from './PermissionRequest';
 import "../css/style.css"
 import Swal from "sweetalert2";
+import "@pnp/sp/sputilities";
+import { IEmailProperties } from "@pnp/sp/sputilities";
 
 let ItemId;
 var CurrentUSERNAME = "";
@@ -300,6 +302,32 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                     Status: "Approved",
                     ManagerComments: $("#comments").val()
                 }).then(() => {
+                    NewWeb.lists.getByTitle("LeaveRequest").items.select("*").filter(`ID eq ${id}`).get()
+                        .then(async (items: any) => {
+                            const emailProps: IEmailProperties = {
+                                To: ['' + items[0].EmployeeEmail + ''],
+                                Subject: 'Leave Request is Approved by ' + items[0].Approver + '',
+                                Body: `Leave Request Details<br/><br/>
+                                Status                    : Approved<br/><br/>
+                                Approver Name             : ${items[0].Approver}<br/><br/>
+                                Leave Type                : ${items[0].LeaveType}<br/><br/>
+                                Half Day / Full Day       : ${items[0].Day}<br/><br/>
+                                Start Date                : ${items[0].StartDate}<br/><br/>
+                                End Date                  : ${items[0].EndDate}<br/><br/>
+                                Compensation Date         : ${items[0].CompOff}<br/><br/>
+                                Reason                    : ${items[0].Reason}<br/><br/>
+                                Manager Comments (if any) : ${items[0].ManagerComments}<br/><br/>`,
+                                AdditionalHeaders: {
+                                    "content-type": "text/html"
+                                }
+                            };
+
+                            await sp.utility.sendEmail(emailProps)
+                                .then((result) => {
+                                    console.log(result)
+                                })
+                        });
+                }).then(() => {
                     swal({
                         text: "Approved successfully!",
                         icon: "success",
@@ -332,6 +360,32 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                 NewWeb.lists.getByTitle("LeaveRequest").items.getById(id).update({
                     Status: "Rejected",
                     ManagerComments: $("#comments").val()
+                }).then(() => {
+                    NewWeb.lists.getByTitle("LeaveRequest").items.select("*").filter(`ID eq ${id}`).get()
+                        .then(async (items: any) => {
+                            const emailProps: IEmailProperties = {
+                                To: ['' + items[0].EmployeeEmail + ''],
+                                Subject: 'Leave Request is Rejected by ' + items[0].Approver + '',
+                                Body: `Leave Request Details<br/><br/>
+                            Status                    : Rejected<br/><br/>
+                            Approver Name             : ${items[0].Approver}<br/><br/>
+                            Leave Type                : ${items[0].LeaveType}<br/><br/>
+                            Half Day / Full Day       : ${items[0].Day}<br/><br/>
+                            Start Date                : ${items[0].StartDate}<br/><br/>
+                            End Date                  : ${items[0].EndDate}<br/><br/>
+                            Compensation Date         : ${items[0].CompOff}<br/><br/>
+                            Reason                    : ${items[0].Reason}<br/><br/>
+                            Manager Comments (if any) : ${items[0].ManagerComments}<br/><br/>`,
+                                AdditionalHeaders: {
+                                    "content-type": "text/html"
+                                }
+                            };
+
+                            await sp.utility.sendEmail(emailProps)
+                                .then((result) => {
+                                    console.log(result)
+                                })
+                        });
                 }).then(() => {
                     swal({
                         text: "Rejected successfully!",
