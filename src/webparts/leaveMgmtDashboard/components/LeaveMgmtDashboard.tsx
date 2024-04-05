@@ -81,6 +81,7 @@ export interface LeaveMgmtDashboardState {
   Configure: boolean;
   Approvals: boolean;
   PermissionApprovalDashboard: boolean;
+  IsCurrentUserisManager: boolean;
 }
 
 export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashboardProps, LeaveMgmtDashboardState> {
@@ -136,7 +137,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       AboutUs: false,
       Configure: false,
       Approvals: false,
-      PermissionApprovalDashboard: false
+      PermissionApprovalDashboard: false,
+      IsCurrentUserisManager: false
     };
     NewWeb = Web("" + this.props.siteurl + "")
 
@@ -165,7 +167,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           Gender: gender
           // },() =>{this.GetleaveBalance()
         });
-        reacthandler.GetleaveBalance(email); //Get User data from list and bind it in form 
+        reacthandler.GetleaveBalance(email);
       },
 
 
@@ -193,8 +195,22 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     this.setState({ CurrentUserId: userID });
 
     await this.isOwnerGroupMember();
+    this.GetBalanceCollectionItems()
 
-
+  }
+  public GetBalanceCollectionItems() {
+    NewWeb.lists.getByTitle("BalanceCollection").items.select("*").getAll()
+      .then((items: any) => {
+        items.map((item: any) => {
+          if (this.state.CurrentUserId == item.ManagerId) {
+            this.setState({
+              IsCurrentUserisManager: true
+            })
+            return
+          }
+        })
+        console.log("ManagerItems", items)
+      });
   }
   public async checkConfiguredOrNot() {
     NewWeb.lists.getByTitle("Configure Master").items.get().then((items: any) => {
@@ -1636,7 +1652,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           <header>
             <div className="clearfix container-new">
               <div className="logo">
-                <img src={require("../img/logo_small.png")} alt="image" />
+                <img src={require("../img/logosmall.png")} alt="image" />
               </div>
               <div className="header-title"><h3>Leave Management System</h3></div>
               <div className="notification-part">
@@ -1655,9 +1671,12 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
               <li className={this.state.AboutUs == true ? "active" : ""} onClick={() => this.showAboutus()}> About  </li>
               <li className={this.state.Holiday == true ? "active" : ""} onClick={() => this.showHoliday()}> Holidays  </li>
               <li className={this.state.PermissionDashboard == true ? "active" : ""} onClick={() => this.showPermissionDashboard()} id='permission-dashboard'> Permission  </li>
-              <li className={this.state.Approvals == true ? "active" : ""} onClick={() => this.showApprovalsDashboard()}>Leave Approvals  </li>
-              <li className={this.state.PermissionApprovalDashboard == true ? "active" : ""} onClick={() => this.showPermissionApprovalsDashboard()}> Permission Approvals  </li>
-
+              {this.state.IsCurrentUserisManager == true &&
+                <>
+                  <li className={this.state.Approvals == true ? "active" : ""} onClick={() => this.showApprovalsDashboard()}>Leave Approvals  </li>
+                  <li className={this.state.PermissionApprovalDashboard == true ? "active" : ""} onClick={() => this.showPermissionApprovalsDashboard()}> Permission Approvals  </li>
+                </>
+              }
             </ul>
           </nav>
         </div>
@@ -1719,7 +1738,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={require("../img/sick leave.svg")} alt="image" />
+                              <img src={require("../img/sickleave.svg")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
@@ -1743,7 +1762,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={require("../img/paternity leave.svg")} alt="image" />
+                              <img src={require("../img/paternityleave.svg")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 
@@ -1755,7 +1774,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                         <div className="col-md-4"><a href="">
                           <div className="three-blocks">
                             <div className="three-blocks-img">
-                              <img src={require("../img/other leave.svg")} alt="image" />
+                              <img src={require("../img/otherleave.svg")} alt="image" />
                             </div>
                             <div className="three-blocks-desc">
 

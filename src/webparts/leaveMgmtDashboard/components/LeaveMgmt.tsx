@@ -1625,7 +1625,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                         <li><img src={`${Icon}`} alt="image" className="attachment-img" /> </li>
                         <li className="word-data"><p className="asset-info-header">{item.name}</p><p></p></li>
                     </ul>
-                    <div className="close-doc-img"><a href="#" onClick={() => handler.DeleteAttachment(item.name)}><img src={require("../img/close (3).png")} alt="close-icon" className="close-image" /></a></div>
+                    <div className="close-doc-img"><a href="#" onClick={() => handler.DeleteAttachment(item.name)}><img src={require("../img/close.png")} alt="close-icon" className="close-image" /></a></div>
                 </div>
             );
         });
