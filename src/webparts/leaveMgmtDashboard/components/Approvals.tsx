@@ -71,7 +71,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
             `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
         );
 
-        
+
 
 
         sp.setup({
@@ -192,7 +192,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
         let userID = userDetails.Id;
         this.setState({ CurrentUserId: userID });
         await this.isOwnerGroupMember();
-    
+
         $(document).on('click', '#permission-dashboard', () => {
             this.setState({
                 PermissionDashboard: true,
@@ -429,11 +429,11 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                             )
                         })}
                     </ul></td>
-                   
+
 
                     <td style={{ cursor: "pointer" }} className='cancel-section'>
 
-                        {(item.State !== "Cancel" || item.State !== "Cancelled") &&
+                        {(item.Status !== "Cancel" || item.Status !== "Cancelled") &&
                             <>
                                 {(item.Status == "Pending" && moment(item.EndDate, "YYYY-MM-DD").isAfter(moment(), 'day')) &&
                                     <>
@@ -471,7 +471,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                                     <div className="table-wrap">
                                         <div className="table-search-wrap clearfix">
                                             <div className="table-search relative">
-  
+
                                             </div>
 
                                         </div>

@@ -428,9 +428,9 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
                                     <></>
                     }
                     <td>
-                        {(item.State !== "Cancel" || item.State !== "Cancelled") &&
+                        {(item.Status !== "Cancel" || item.Status !== "Cancelled") &&
                             <>
-                                {(item.Status != "Cancelled" && moment(item.timefromwhen, "DD-MM-YYYY hh:mm A").isSameOrAfter(moment(), 'day')) &&
+                                {(item.Status != "Pending" && moment(item.timefromwhen, "DD-MM-YYYY hh:mm A").isSameOrAfter(moment(), 'day')) &&
 
                                     <>
                                         <button onClick={() => handler.Approve(item.ID)}>Approve</button>
