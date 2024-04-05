@@ -3,7 +3,6 @@ import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { SPComponentLoader } from "@microsoft/sp-loader";
-// import { IHolidayState } from './IHolidayState';
 import { Web } from '@pnp/sp/webs';
 import "@pnp/sp/site-users/web";
 import * as $ from 'jquery';
@@ -11,7 +10,6 @@ import * as moment from "moment";
 import { _SiteGroups } from '@pnp/sp/site-groups/types';
 import "../css/style.css"
 
-// const NewWeb = Web('https://tmxin.sharepoint.com/sites/ER/');
 let ItemId;
 let NewWeb: any;
 
@@ -99,8 +97,6 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
   }
   public logout() {
 
-    localStorage.clear();
-    // window.location.href=` https://tmxin.sharepoint.com/sites/POC/SPIP/_layouts/closeConnection.aspx?loginasanotheruser=true`;
     window.location.href = `https://login.windows.net/common/oauth2/logout`;
 
   }
@@ -128,15 +124,7 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
   public GetHolidaylist() {
     var reactHandler = this;
     var url = `${this.props.siteurl}/_api/web/lists/getbytitle('HolidayCollection')/items?$select=StartDate,HolidayName&$orderby=StartDate asc`;
-    {/* NewWeb.lists.getByTitle("HolidayCollection").items.select("StartDate","HolidayName").top(10).orderBy("StartDate",true).get()
-    .then((items)=>{
-      if(items.length != 0){
-        this.setState({
-          HolidayItems:items
-        });
-      }
-    });
-  */}
+   
 
 
     $.ajax({
@@ -158,13 +146,7 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
 
   public async CheckManagerPermissionPrivillages() {
 
-    /*  let SiteGroups = 'LMS Admin';
-      let InGroup: boolean = false;
-   
-      let grp = await NewWeb.currentUser.groups.get().then((r: any) => {
-        r.forEach((grp: _SiteGroups) => {
-          if (grp["Title"] == SiteGroups) {
-            InGroup = true;*/
+ 
     let groups = await NewWeb.currentUser.groups();
     for (var i = 0; i < groups.length; i++) {
       if (groups[i].Title == 'LMS Admin') {
@@ -178,17 +160,9 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
 
 
       }
-      {/*   if(groups[i].Title != 'LMS Admin'){  
-        this.setState({IsUser:true}); //To enable Manager access to Specific Group Users alone                             
-        this.GetListitems("User");
-        break;
-      }else{
-        this.setState({IsUser:false}); 
-      }
-    */}
+     
 
     }
-    // this.GetListitems("User");
   }
   public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
     let count = 0;

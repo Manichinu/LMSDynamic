@@ -29,10 +29,8 @@ var FileNameGenerated: string;
 let inputFile: any = '';
 var fileInfos: any[] = [];
 
-//var fileInfos: IAttachmentFileInfo[] = [];
 var CurrentUSERNAME = "";
 let LRUploadedFiles = [];
-//let AttachmentCopies = [];
 let ItemId;
 let StartdateArr = [];
 let datesCollection: string[] = [];
@@ -47,15 +45,12 @@ var RestrictedHoliday: any;
 export interface ILeaveMgmtState {
     items: any[];
     LeaveID: any;
-    //EmployeeName:any;
     leavetype: any;
     Day: any;
     Time: any;
     Startdate: any;
     Enddate: any;
-    Reason: any;
-    //Attachments: any;
-    //fileInfos: any[];
+    Reason: any;    
     uploadfiles: any[];
     CurrentUserName: string;
     CurrentUserDesignation: string;
@@ -71,9 +66,7 @@ export interface ILeaveMgmtState {
     DatePickerDisable: boolean;
 }
 
-//let NewWeb = Web("https://tmxin.sharepoint.com/sites/POC/SPIP/");
-//let NewWeb = Web("https://tmxin.sharepoint.com/sites/lms");
-// let NewWeb = Web("https://tmxin.sharepoint.com/sites/ER");
+
 let NewWeb: any;
 export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps, ILeaveMgmtState> {
 
@@ -107,10 +100,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         );
 
 
-        // SPComponentLoader.loadCss(
-        //     `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-        // );
-
+       
 
 
         this.state = {
@@ -121,9 +111,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             Startdate: null,
             Enddate: null,
             Reason: "",
-            // Attachments: null,
             LeaveID: null,
-            //fileInfos: [],
             AttachmentCopies: [],
             uploadfiles: null,
             CurrentUserName: "",
@@ -141,7 +129,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         };
         NewWeb = Web("" + this.props.siteurl + "")
 
-        //this.handleChange = this.handleChange.bind(this);
     }
 
 
@@ -211,9 +198,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
     public CheckValidationforExistingleave(email: any) {
         datesCollection = [];
         var reactHandler = this;
-        // var startdate = $("#txt-Startdate").val();
-        //var enddate = $("#txt-Enddate").val();
-        //var filterquery = `${this.state.Email}' and '${startdate}' ge startdate and '${enddate}' le enddate`
+
         var url = `${this.props.siteurl}/_api/web/lists/getbytitle('LeaveRequest')/items?$select=StartDate,EndDate,EmployeeEmail&$filter('Author/EmployeeEmail eq '${email}'')`;
 
         $.ajax({
@@ -222,15 +207,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             async: false,
             headers: { 'Accept': 'application/json; odata=verbose;' },
             success: function (resultData) {
-                // console.log(resultData);
-                debugger;
-                {/* for (var i = 0; i < resultData.d.results.length; i++) {
-
-          var sdate = resultData.d.results[i].startdate;
-          var edate = resultData.d.results[i].enddate;
-          var mailid = resultData.d.results[i].EmployeeEmail;
-
-        }*/}
+             
 
                 reactHandler.setState({
                     Appliedleaveitems: resultData.d.results
@@ -247,14 +224,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                     }
                     console.log(datesCollection);
 
-                    // datesCollection.push(`${inbetweendates.getDate() + i}/${inbetweendates.getMonth() + 1}/${inbetweendates.getFullYear()}`)
-
-                    //  console.log(datesCollection);
-
-
-                    {/* if (resultData.d.results[i].startdate == "startdate") {
-            StartdateArr.push(resultData.d.results[i]);
-          }*/}
 
                 }
             },
@@ -264,8 +233,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
     }
     public GetPreviousLeaveRequestDates(email: any) {
 
-        //var filterquery = `EmployeeEmail eq '${this.state.Email}' and '${permissionDate}' ge startdate and '${permissionDate}' le enddate`
-        //// and enddate ge '${moment().format("DD-MM-YYYY")}'
+       
         var filterquery = `EmployeeEmail eq '${email}' and Status ne 'Rejected'`
         NewWeb.lists.getByTitle("LeaveRequest").items.select("StartDate", "EndDate", "EmployeeEmail", "Status").filter(filterquery).orderBy("Created", false).get().then((response: any): void => {
             if (response.length != 0) {
@@ -290,11 +258,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
     }
     public GetPreviousPermissionRequestDates(email: any) {
 
-        // var filterquery = `EmployeeEmail eq '${this.state.Email}' and '${permissionDate}' ge startdate and '${permissionDate}' le enddate`
-        debugger;
         var filterquery = `EmployeeEmail eq '${email}' and Status ne 'Rejected'`// and timefromwhen ge '${moment().format("DD-MM-YYYY")}'`
-        debugger;
-        //  var filterquery = `Author/EmployeeEmail eq '${email}'and timefromwhen ge '${moment().format("DD-MM-YYYY")}'`
         NewWeb.lists.getByTitle("EmployeePermission").items.select("timefromwhen", "EmployeeEmail", "Status").filter(filterquery).orderBy("Created", false).get().then((response: any): void => {
             if (response.length != 0) {
                 let i;
@@ -829,7 +793,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                 reactHandler.GetPreviousLeaveRequestDates(email);
                 reactHandler.GetPreviousPermissionRequestDates(email);
 
-                // reacthandler.CheckValidationforExistingleave(email); //Get User data from list and bind it in form 
             },
 
             error: function (jqXHR, textStatus, errorThrown) {
@@ -871,33 +834,28 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             var Days = moment.duration(end.diff(start)).asDays();
             if (leavetype == "Casual Leave") {
 
-                // this.GetCausalleavebalance(this.state.Email);
                 this.GetCausalleaveExhaustbalance(this.state.Email, Days);
                 return false;
             } else {
                 if (leavetype == "Sick Leave") {
 
-                    // this.GetSickleavebalance(this.state.Email);
                     this.GetSickleaveExhaustbalance(this.state.Email, Days);
                     return false;
                 } else {
                     if (leavetype == "Paternity Leave") {
 
-                        //   this.GetPaternityleavebalance(this.state.Email);
                         this.GetPaternityleaveExhaustbalance(this.state.Email, Days);
 
                         return false;
                     } else {
                         if (leavetype == "Maternity Leave") {
 
-                            // this.GetMaternityleavebalance(this.state.Email);
                             this.GetMaternityleaveExhaustbalance(this.state.Email, Days);
 
                             return false;
                         } else {
                             if (leavetype == "Earned Leave") {
 
-                                //this.GetEarnedleavebalance(this.state.Email);
                                 this.GetEarnedleaveExhaustbalance(this.state.Email, Days);
                                 return false;
                             } else {
@@ -1013,14 +971,11 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
                                             let ID = item.data.Id;
                                             NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {
-                                                /*  NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {*/
                                                 swal({
                                                     text: "Leave applied successfully!",
                                                     icon: "success",
                                                 }).then(() => {
-                                                    // setTimeout(() => {
-                                                    // location.href = "https://tmxin.sharepoint.com/sites/ER/SitePages/Dashboard.aspx?env=WebView";
-                                                    // }, 3000);
+                                                  
                                                     location.reload()
                                                 });
                                             });
@@ -1096,7 +1051,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                         Days = 1;
 
 
-                                        // var Days = moment.duration(end.diff(start)).asDays();
                                         NewWeb.lists.getByTitle("LeaveRequest").items.add({
 
                                             LeaveType: leavetype,
@@ -1121,14 +1075,11 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
                                                 let ID = item.data.Id;
                                                 NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {
-                                                    /*  NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {*/
                                                     swal({
                                                         text: "Leave applied successfully!",
                                                         icon: "success",
                                                     }).then(() => {
-                                                        // setTimeout(() => {
-                                                        // location.href = "https://tmxin.sharepoint.com/sites/ER/SitePages/Dashboard.aspx?env=WebView";
-                                                        // }, 3000);
+                                                       
                                                         location.reload()
                                                     });
                                                 });
@@ -1181,12 +1132,8 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                 if (this.isInArray(PreviousLeaveRequestDates, leaveend) == false) {//6 not found
                                     if (this.LeaveformValidation()) {
 
-                                        //var Days = moment.duration(end.diff(start)).asDays();
                                         var Days = moment.duration(end.diff(start)).add(1, 'days').asDays();
 
-                                        //var Days = 1;
-
-                                        // var Days = moment.duration(end.diff(start)).asDays();
                                         var Days = moment.duration(end.diff(start)).add(1, 'days').asDays();
                                         NewWeb.lists.getByTitle("LeaveRequest").items.add({
 
@@ -1212,15 +1159,11 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
                                                 let ID = item.data.Id;
                                                 NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {
-                                                    // NewWeb.lists.getByTitle("LeaveRequest").fields.addUrl("LRAttachments", {DisplayFormat: UrlFieldFormatType.Hyperlink});
-                                                    /*  NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {*/
                                                     swal({
                                                         text: "Leave applied successfully!",
                                                         icon: "success",
                                                     }).then(() => {
-                                                        // setTimeout(() => {
-                                                        // location.href = "https://tmxin.sharepoint.com/sites/ER/SitePages/Dashboard.aspx?env=WebView";
-                                                        // }, 3000);
+                                                        
                                                         location.reload();
                                                     });
                                                 });
@@ -1262,7 +1205,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
     public isInArray(PreviousLeaveRequestDates: any, value: string) {
         var DateStatus = false;
-        // return (PreviousLeaveRequestDates.find((item: any) => { return item.Date == value && item.Status == "Cancelled" }) || []).length > 0;
         PreviousLeaveRequestDates.map((item: any) => {
             if (item.Date == value && (item.Status == "Approved" || item.Status == "Pending")) {
                 DateStatus = true;
@@ -1315,23 +1257,19 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             CurrentTime = moment().format("DMYYYYHMS"); //1110202191045
             var tempfilename = fileArr[i].name.split(".");
             FileNameGenerated = tempfilename[0] + "-" + CurrentTime + "." + tempfilename[1] + "";
-            //  FileNameGenerated = tempfilename[0] + "." + tempfilename[1] + "";
             NewWeb.getFolderByServerRelativeUrl(this.props.context.pageContext.web.serverRelativeUrl + "/LeaverequestUploads").files.add(FileNameGenerated, fileArr[i], true).then((data: any) => {
                 data.file.getItem().then((item: any) => {
-                    //  AllFileAttachmentURL += "" + "https://tmxin.sharepoint.com/" +data.data.ServerRelativeUrl;// + "|";
                     AllFileAttachmentURL += "" + data.data.ServerRelativeUrl;// + "|";
                     //get value
 
 
 
-                    //  this.AddtoListItem(AllFileAttachmentURL, FileNameGenerated);
                     LRUploadedFiles.push(data);
 
                     item.update({
                         RequestSessionMasterID: this.state.LeaveID,
 
                     }).then((myupdate: any) => {
-                        //  this.TriggerAttachment();
                         console.log("File uploaded sucessfully : " + i + "");
 
                     });
@@ -1383,7 +1321,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
             reader.onload = (function (e) {
                 return function (e) {
-                    //Push the converted file into array
                     fileInfos.push({
                         "name": file.name,
                         "content": e.target.result
@@ -1442,7 +1379,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         });
 
         console.log(this.state.AttachmentCopies);
-        // reactHandler.TriggerAttachment();
 
     }
 
@@ -1542,9 +1478,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             $(".opttime").prop('disabled', false);
 
 
-            //To restrict future date
-
-            // $('#txt-Enddate').attr('max', startdate.toString().slice(0, 10));
         }
 
     }
@@ -1714,9 +1647,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                     <div className="col-md-8">
                                         <div className="form-group required relative">
                                             <div className="form-group">
-                                                {/* <input type="text" className="form-control" placeholder='Employee Name' id="txt-name"  />*/}
                                             </div>
-                                            {/* <span className="floating-label form-comment-txt "> </span>*/}
                                         </div>
                                     </div>
                                 </div>
@@ -1781,7 +1712,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                             <div className="container">
 
                                             </div>
-                                            {/*<input type="text" id="txt-Startdate"  className="form-control" placeholder="dd-mm-yyyy" autoComplete="off"/>*/}
                                             <input type="date" className="form-control" id="txt-Startdate" autoComplete="off" onChange={() => this.getStartDate()} />
                                             <span className="floating-label ">Start Date</span>
 
@@ -1791,7 +1721,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                     <div className="col-md-4 col-sm-4">
                                         <div className="form-group required relative">
                                             <input type="date" className="form-control" id="txt-Enddate" onChange={() => this.getEndDate()} />
-                                            {/* <input type="text" id="txt-Enddate" className="form-control"  placeholder="dd-mm-yyyy" autoComplete="off" />*/}
                                             <span className="floating-label ">End Date</span>
 
                                         </div>
@@ -1825,7 +1754,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                         <div className="form-group required relative">
                                             <div className="form-group">
 
-                                                {/*<input type="text" className="form-control" id="txt-reason" maxLength={250} autoComplete="off" onKeyPress={() => this.LeaveformValidation()} />*/}
                                                 <input type="text" className="form-control" id="txt-reason" maxLength={250} autoComplete="off" onKeyPress={() => this.clearerror()} />
                                                 <span className="floating-label ">Enter Reason</span>
                                             </div>
@@ -1845,41 +1773,11 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                                     <h5>Choose an file. </h5>
 
                                                 </label>
-                                                {/* <button className="img-upload">Choose an file. </button>*/}
                                             </ReactFileReader>
-                                            {/*  <input id="leave-file-upload" className="leave-file-upload" name="leave-file-upload" type="file" onChange={() => this.UploadFile} multiple />*/}
                                         </div>
                                         <div id="leaveBindCopy">
                                             {LeaveRequestAttachments}
-                                            {/*  {handler.state.AttachmentCopies && handler.state.AttachmentCopies.map(function (item, key) {
-                        var Extension = item.name.split(/\.(?=[^\.]+$)/);
-                        console.log(item.name);
-                        var Ext = Extension[1].toUpperCase(); //PDF         
-                        var Icon = "";
-                        if (Ext == "PDF") {
-                          //  Icon = `${this.props.siteurl}/SiteAssets/LeavePortal/img/pdf.svg`;
-                          Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/pdf.svg`;
-                        } else if (Ext == "JPG" || Ext == "JPEG" || Ext == "PNG" || Ext == "GIF" || Ext == "SVG") {
-                          Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/DummyImage.svg`;
-                        } else if (Ext == "DOCX" || Ext == "DOC") {
-                          Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/docx.svg`;
-                        } else if (Ext == "XLSX" || Ext == "XLS") {
-                          Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/xlsx.svg`;
-                        } else if (Ext == "PPTX") {
-                          Icon = `${handler.props.siteurl}/SiteAssets/LeavePortal/img/pptx.svg`;
-                        }
-                        console.log(item.name);
-                        return (
-                          <div className="file-img upload-img">
-                            <ul className="nav nav-pills">
-                              <li><img src={`${Icon}`} alt="image" className="attachment-img" /> </li>
-                              <li className="word-data"><p className="asset-info-header">{item.name}</p><p></p></li>
-
-                            </ul>
-                            <div className="close-doc-img"><a href="#"><img src="https://tmxin.sharepoint.com/sites/ER/SiteAssets/LeavePortal/img/close (3).png" alt="close-icon" className="close-image" /></a></div>
-                          </div>
-                        );
-                      })}*/}
+                                           
                                         </div>
 
                                     </div>
@@ -1896,7 +1794,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                 ></div>
                                 <div className="col-md-12 btn-padding">
                                     <button className="btn btn-primary" id="submit" onClick={() => this.leavetypevalidation()}>Submit</button>
-                                    {/* <button className="btn btn-primary" id="submit" onClick={() => this.LeaveformValidation()}>Submit</button> */}
 
                                 </div>
                             </div>

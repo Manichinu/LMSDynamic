@@ -19,13 +19,12 @@ import "@pnp/sp/items";
 import "@pnp/sp/attachments";
 import "../css/style.css"
 
-let NewWeb = Web("https://tmxin.sharepoint.com/sites/ER/");
 let datesCollection: string[] = [];
 var PreviousLeaveRequestDates: any[] = [];
 var PreviousPermissionRequestDates = [];
 let IsValidReqularRequest = false;
 var Approver_Manager_Details: any = []
-
+let NewWeb:any;
 
 export interface IPermissionRequestState {
   startDate: any;
@@ -64,9 +63,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.js`
     );
 
-    // SPComponentLoader.loadCss(
-    //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-    // );
+  
     this.state = {
 
       startDate: new Date(),
@@ -117,16 +114,13 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
   public getDaysBetweenDates(startDate: moment.Moment, endDate: moment.Moment) {
     var now = startDate.clone();
     while (now.isSameOrBefore(endDate)) {
-      // PreviousLeaveRequestDates.push(now.format('DD/MM/YYYY'));
       PreviousLeaveRequestDates.push(now.format('YYYY-MM-DD'));
-      //  PreviousPermissionRequestDates.push(now.format('DD/MM/YYYY'));
       now.add(1, 'days').format('DD/MM/YYYY');
     }
     return PreviousLeaveRequestDates;
   };
   public GetPreviousLeaveRequestDates(email: any) {
 
-    //var filterquery = `EmployeeEmail eq '${this.state.Email}' and '${permissionDate}' ge startdate and '${permissionDate}' le enddate`
 
     var filterquery = `EmployeeEmail eq '${email}' and Status ne 'Rejected'`// and enddate ge '${moment().format("DD-MM-YYYY")}'`
     NewWeb.lists.getByTitle("LeaveRequest").items.select("StartDate", "EndDate", "EmployeeEmail").filter(filterquery).orderBy("Created", false).get().then((response: any): void => {
@@ -153,11 +147,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
 
   public GetPreviousPermissionRequestDates(email: any) {
 
-    // var filterquery = `EmployeeEmail eq '${this.state.Email}' and '${permissionDate}' ge startdate and '${permissionDate}' le enddate`
-    debugger;
     var filterquery = `EmployeeEmail eq '${email}'and Status ne 'Rejected'`
-    debugger;
-    //  var filterquery = `Author/EmployeeEmail eq '${email}'and timefromwhen ge '${moment().format("DD-MM-YYYY")}'`
     NewWeb.lists.getByTitle("EmployeePermission").items.select("timefromwhen", "EmployeeEmail").filter(filterquery).orderBy("Created", false).get().then((response: any): void => {
       if (response.length != 0) {
         let i;
@@ -165,7 +155,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
           var From = response[i].timefromwhen;
 
           var tempFromDate = moment(From, "DD-MM-YYYYTHH:mm").format('DD-MM-YYYY');
-          // var tempFromDate = moment(From).format("YYYY-MM-DD");
           var tempToDate = moment(From, "DD-MM-YYYYTHH:mm").format("DD-MM-YYYY");
 
 
@@ -183,9 +172,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
   public AlreadyexistinPR(email: any) {
     datesCollection = [];
     var reactHandler = this;
-    // var startdate = $("#txt-Startdate").val();
-    //var enddate = $("#txt-Enddate").val();
-    //var filterquery = `${this.state.Email}' and '${startdate}' ge startdate and '${enddate}' le enddate`
     var url = `${this.props.siteurl}/_api/web/lists/getbytitle('EmployeePermission')/items?$select=timefromwhen,EmployeeEmail&$filter('Author/EmployeeEmail eq '${email}'')`;
 
     $.ajax({
@@ -224,14 +210,10 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
   }
   public Calculatehours() {
     this.clearerror();
-    //this.LeaveformValidation();
     var selectedhr: any = $('#ddl-Permissionhr').val();
 
     var selectedtime = this.state.startDate;
-    //12 hrs
-    //var calculatedtime = moment(selectedtime, "YYYY-MM-DDTHH:mm").add(selectedhr, 'hours').format('DD-MM-YYYY HH:mm');
-    //24 hrs
-
+    
     var calculatedtime = moment(selectedtime, "YYYY-MM-DDTHH:mm").add(selectedhr, 'hours').format('D-MM-YYYY hh:mm A');
 
     $("#txt-EndDate").val(calculatedtime);
@@ -244,19 +226,15 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     var selectedhr: any = $('#ddl-Permissionhr').val();
     var selectedtime = this.state.selectedtime;
     console.log(selectedtime);
-    //12 hrs
-    //var calculatedtime = moment(selectedtime, "YYYY-MM-DDTHH:mm").add(selectedhr, 'hours').format('DD-MM-YYYY HH:mm');
-    //24 hrs
-    // var calculatedtime = moment(selectedtime, "d-MM-yyyy h:mm A").add(selectedhr, 'hours').format('MMM-d-yyyy h:mm A');
     var calculatedtime = moment(selectedtime, "YYYY-MM-DDTHH:mm").add(selectedhr, 'hours').format('D-MM-YYYY hh:mm A');
     $("#txt-EndDate").val(calculatedtime);
 
   }
   public _spLoggedInUserDetails() {
-    NewWeb.currentUser.get().then((user) => {
+    NewWeb.currentUser.get().then((user:any) => {
       let userID = user.Id;
       this.setState({ CurrentUserId: userID });
-    }, (errorResponse) => {
+    }, (errorResponse:any) => {
 
     }
     );
@@ -323,10 +301,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     } else if (Formstatus == false && startdate == "") {
       ErrorMsg = "Please Select StartDate";
       Formstatus = true;
-      {/* else if (Formstatus == false && enddate == "") {
-      ErrorMsg = "Please Select EndDate";
-      Formstatus = true;
-  */}
+    
 
     } else if (Formstatus == false && Reason == "") {
       ErrorMsg = "Please Enter Reason";
@@ -431,7 +406,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
 
         })
 
-          .then((item) => {
+          .then((item:any) => {
 
             let ID = item.data.Id;
 
@@ -440,9 +415,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
               icon: "success",
 
             }).then(() => {
-              // setTimeout(() => {
-              // location.href = "https://tmxin.sharepoint.com/sites/ER/SitePages/PermissionDashboard.aspx?env=WebView";
-              // }, 3000);
+              
               location.reload()
 
             });
@@ -467,7 +440,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     var currentYear = new Date().getFullYear()
     let nextYear = currentYear + 1
     NewWeb.lists.getByTitle("BalanceCollection").items.select("ID", "*", "CasualLeaveBalance", "EmployeeEmail", "Manager/Title", "Manager/EMail").expand("Manager").filter(`EmployeeEmail eq '${EmployeeEmailid}'`).get()
-      .then((result) => {
+      .then((result:any) => {
         if (result.length != 0) {
           console.log(result);
 
@@ -510,13 +483,10 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
                         dateFormat="d-MM-yyyy h:mm aa"
 
                       />
-                      {/* <div className="img-icon">
-                        <img src="https://tmxin.sharepoint.com/sites/ER/SiteAssets/LeavePortal/img/Calendar.png" style={{ width: "30px" }}></img>
-    </div>*/}
+                  
 
                       <span className="floating-label ">Permission on</span>
-                      {/*} <input type="datetime-local" className="form-control" id="txt-Startdate" onChange={() => this.getselectedstarttime($("#txt-Startdate").val())} />            
-                  <input type="datetime-local" format-value="yyyy-MM-ddThh:mm" className="form-control" id="txt-Startdate" onChange={() => this.getselectedstarttime($("#txt-Startdate").val())} />*/}
+                     
 
                     </div>
                   </div>

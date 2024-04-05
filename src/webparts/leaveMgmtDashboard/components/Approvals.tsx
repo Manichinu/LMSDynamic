@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
-// import { IPermissionDashboardState } from './IPermissionDashboardState';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { sp } from "@pnp/sp";
@@ -9,8 +8,6 @@ import { Web } from '@pnp/sp/webs';
 
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
-//import "datatables.net-dt/js/dataTables.dataTables";
-//import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -28,7 +25,6 @@ import { IEmailProperties } from "@pnp/sp/sputilities";
 let ItemId;
 var CurrentUSERNAME = "";
 var Usertype = "";
-// const NewWeb = Web('https://tmxin.sharepoint.com/sites/ER/');
 let NewWeb: any;
 
 export interface PermissionDashboardState {
@@ -75,9 +71,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
             `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
         );
 
-        // SPComponentLoader.loadCss(
-        //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-        // );
+        
 
 
         sp.setup({
@@ -109,7 +103,6 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
         console.log(userID);
         $.ajax({
 
-            // url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq  + ${this.props.userId}`,
             url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
 
             type: "GET",
@@ -199,12 +192,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
         let userID = userDetails.Id;
         this.setState({ CurrentUserId: userID });
         await this.isOwnerGroupMember();
-        //await this.GetListitems();
-        // console.log("User Type:"+Usertype);
-        // this.Checkusertype(Usertype);
-
-
-        //  this.loadTable();
+    
         $(document).on('click', '#permission-dashboard', () => {
             this.setState({
                 PermissionDashboard: true,
@@ -217,7 +205,6 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
         var reactHandler = this;
         NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate", "CompOff").filter(`ApproverEmail eq '${this.state.Empemail}'`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
 
-            // await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate").filter(`Author/Id eq ${this.props.userId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
 
             .then((items: any) => {
                 if (items.length != 0) {
@@ -234,7 +221,6 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
             });
     }
     public loadTable() {
-        //($('#LMSDashboard') as any).DataTable.destroy();
 
         ($('#LMSDashboard') as any).DataTable({
             pageLength: 5,
@@ -248,7 +234,6 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                 this.api().columns().every(function () {
 
                     var column = this;
-                    //  var select = $('<select class="form-control"><option value="">All</option></select>')
                     var select = $('<select><option value="">All</option></select>')
 
                         .appendTo($(column.header()).empty()).on('change', function () {
@@ -283,7 +268,6 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
             }
 
         });
-        //  }, 500);
 
     }
     public Approve(id: any) {
@@ -445,9 +429,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                             )
                         })}
                     </ul></td>
-                    {/*  {handler.state.IsAdmin == true &&
-                  <td>{item.Requester}</td>
-                }*/}
+                   
 
                     <td style={{ cursor: "pointer" }} className='cancel-section'>
 
@@ -489,8 +471,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                                     <div className="table-wrap">
                                         <div className="table-search-wrap clearfix">
                                             <div className="table-search relative">
-                                                {/* <input type="text" placeholder="Search Here" className="" />
-                      <img src="https://tmxin.sharepoint.com/sites/POC/SPIP/SiteAssets/LeavePortal/img/search.svg" alt="image" />*/}
+  
                                             </div>
 
                                         </div>

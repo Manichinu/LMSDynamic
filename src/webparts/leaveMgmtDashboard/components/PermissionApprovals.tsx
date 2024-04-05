@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
-// import { IPermissionDashboardState } from './IPermissionDashboardState';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { sp } from "@pnp/sp";
@@ -9,8 +8,7 @@ import { Web } from '@pnp/sp/webs';
 
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
-//import "datatables.net-dt/js/dataTables.dataTables";
-//import "datatables.net-dt/css/jquery.dataTables.min.css";
+
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -75,9 +73,7 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
             `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
         );
 
-        // SPComponentLoader.loadCss(
-        //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-        // );
+      
 
 
         sp.setup({
@@ -109,7 +105,6 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
         console.log(userID);
         $.ajax({
 
-            // url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq  + ${this.props.userId}`,
             url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
 
             type: "GET",
@@ -217,7 +212,6 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
         var reactHandler = this;
 
         NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "EmployeeEmail", "Reason", "Status").filter(`ApproverEmail eq '${this.state.Empemail}'`).orderBy("Created", false).top(5000).get()
-            //NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester","EmployeeEmail", "Reason", "Status").filter("EmployeeEmail eq '" + this.state.Empemail + "'").orderBy("Created", false).top(5000).get()
 
             .then((items: any) => {
                 if (items.length != 0) {
@@ -240,7 +234,6 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
 
     }
     public loadTable() {
-        //($('#LMSDashboard') as any).DataTable.destroy();
 
         ($('#LMSDashboard') as any).DataTable({
             pageLength: 5,
@@ -254,7 +247,6 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
                 this.api().columns().every(function () {
 
                     var column = this;
-                    //  var select = $('<select class="form-control"><option value="">All</option></select>')
                     var select = $('<select><option value="">All</option></select>')
 
                         .appendTo($(column.header()).empty()).on('change', function () {
@@ -449,9 +441,7 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
                             </>
                         }
                     </td>
-                    {/* <td>{moment(item.TimeUpto, "YYYY-MM-DDTHH:mm").format('DD-MM-YYYY hh:mm A')}</td>   
-                <td>{moment(item.timefromwhen,"YYYY-MM-DDTHH:mm").format('DD-MM-YYYY hh:mm A')}</td>
-                <td><a href="#" onClick={() => handler.View(item.Id)}>View</a></td>*/}
+                  
                 </tr>
 
             );
@@ -478,8 +468,7 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
                                     <div className="table-wrap">
                                         <div className="table-search-wrap clearfix">
                                             <div className="table-search relative">
-                                                {/* <input type="text" placeholder="Search Here" className="" />
-                      <img src="https://tmxin.sharepoint.com/sites/POC/SPIP/SiteAssets/LeavePortal/img/search.svg" alt="image" />*/}
+
                                             </div>
 
                                         </div>

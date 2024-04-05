@@ -12,9 +12,6 @@ import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "datatables.net";
-//import "datatables.net-buttons";
-//import "datatables.net-dt/css/jquery.dataTables.css";
-//import "datatables.net-buttons-dt/css/buttons.dataTables.css";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -60,7 +57,6 @@ var LeaveTypee: any;
 var LeaveStatuss: any;
 var SpecificDate: any;
 
-// const NewWeb = Web('${this.props.siteurl}/');
 var NewWeb: any;
 let progressEndValue = 100;
 let overAllValue = 0;
@@ -113,9 +109,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
     );
 
-    // SPComponentLoader.loadCss(
-    //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-    // );
+   
 
 
     sp.setup({
@@ -149,8 +143,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
   }
 
   public logout() {
-    // window.location.href = `https://login.microsoftonline.com/556e6b1f-b49d-4278-8baf-db06eeefc8e9/oauth2/v2.0/logout`;
-    //localStorage.clear();
     window.location.href = `https://login.windows.net/common/oauth2/logout`;
   }
 
@@ -174,8 +166,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           // },() =>{this.GetleaveBalance()
         });
         reacthandler.GetleaveBalance(email); //Get User data from list and bind it in form 
-        // reacthandler.Checkuserexists();
-        // reacthandler.checkUserInGroup("LMS Admin");
       },
 
 
@@ -187,12 +177,10 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
     });
 
-  }
-
+  }  
   public async componentDidMount() {
     this.GetCurrentUserDetails();
     this.checkConfiguredOrNot();
-   
 
     const url: any = new URL(window.location.href);
     url.searchParams.get("ItemID");
@@ -204,8 +192,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     this.setState({ CurrentUserId: userID });
 
     await this.isOwnerGroupMember();
-    //this.loadTable();
-    //await this.GetListitems();
+    
 
   }
   public async checkConfiguredOrNot() {
@@ -697,25 +684,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
     let InGroup: boolean = false;
     const title = (_SiteGroups as any)['Title'];
-
-    // let grp:any = sp.web.currentUser.groups.get().then((r: any) => {
-    //   r.forEach((grp: _SiteGroups) => {
-    //     if (grp["Title"] == strGroup) {
-    //       InGroup = true;
-
-    //       this.GetAdminlistitems();
-
-
-    //     }
-    //     else {
-    //       InGroup = false;
-    //       this.GetUserlistitems();
-    //     }
-
-    //     console.log(grp["Title"]);
-    //   });
-    // });
-
     return InGroup;
 
   }
@@ -728,7 +696,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     console.log(userID);
     $.ajax({
 
-      // url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq  + ${this.props.userId}`,
       url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
 
       type: "GET",
@@ -778,7 +745,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         await this.GetAdminlistitems();
 
       } else {
-        // this.setState({ IsAdmin: false });
         await this.GetUserlistitems();
       }
 
@@ -809,7 +775,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     var reactHandler = this;
     NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate", "CompOff").expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
 
-      // await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate").filter(`Author/Id eq ${this.props.userId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
 
       .then((items: any) => {
         if (items.length != 0) {
@@ -837,7 +802,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         this.setState({ IsAdmin: true });
         UserType = "Admin";
         Usertype = UserType;
-        //reacthandler.Checkusertype(UserType);
 
 
         return false;
@@ -846,55 +810,11 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         UserType = "User";
         Usertype = UserType;
 
-        // reacthandler.Checkusertype(UserType);
 
       }
     }
     console.log(UserType);
-    {/* if (UserType == "User") {
-      console.log("User :" + UserType);
-      let userDetails = await this.spLoggedInUser(this.props.context);
-      console.log(userDetails.Id);
-      let userID = userDetails.Id;
-
-      await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate").filter(`Author/Id eq  ${userID}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-
-        //  await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "startdate", "enddate","Day", "Reason", "Days", "Requester", "EmployeeEmail", "leavetype","Status","AppliedDate").filter(`Author/Id eq ${this.state.CurrentUserId}`).orderBy("Created", false).top(5000).get()
-        .then((items) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else {
-            this.loadTable();
-          }
-        });
-
-    } else {
-      if (UserType =="Admin") {
-      console.log("Admin :" + UserType);
-      await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate").expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-
-        .then((items) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else {
-            this.loadTable();
-          }
-        });
-      }
-    }*/}
+   
 
   }
 
@@ -905,7 +825,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     for (var i = 0; i < groups.length; i++) {
       if (groups[i].Title == 'LMS Admin') {
         UserType = "Admin";
-        // this.setState({ IsAdmin: true });
         console.log(UserType);
         Usertype = UserType;
 
@@ -920,43 +839,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     }
 
     return Usertype;
-    /* if (UserType == "User") {
-   
-     //  await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate").filter(`Author/Id eq ${this.state.CurrentUserId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-       await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate").filter("EmployeeEmail eq '" +this.state.Empemail +"'").expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-       .then((items) => {
-           if (items.length != 0) {
-   
-             reactHandler.setState({
-               DatatableItems: items
-             });
-             this.loadTable();
-   
-           }
-           else {
-             this.loadTable();
-           }
-         });
-   
-     } else {
-       //if (UserType =="Admin") {
-   
-       await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate").expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-   
-         .then((items) => {
-           if (items.length != 0) {
-   
-             reactHandler.setState({
-   
-               DatatableItems: items
-             });
-             this.loadTable();
-   
-           }
-           else {
-             this.loadTable();
-           }
-         });*/
+ 
 
 
   }
@@ -970,7 +853,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       let userID = userDetails.Id;
 
       await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate", "CompOff").filter(`Author/Id eq ${this.props.userId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-        //  await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate").filter("EmployeeEmail eq '" + this.state.Empemail + "'").expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
         .then((items: any) => {
           if (items.length != 0) {
 
@@ -986,7 +868,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         });
 
     } else {
-      //if (UserType =="Admin") {
       console.log("Admin :" + UserType);
       await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate", "CompOff").expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
 
@@ -1033,26 +914,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       }
     });
   }
-  /*public async GetGroupMembers()
-  {
-    let groups = await NewWeb.currentUser.groups();
-    graph.groups.top(999).select('mailNickname,id').get().then(groups=>{
-      console.log(groups);
-      groups.forEach( group=>{
-   
-        if(group['Internal Tmax Guestuser']== "Internal Tmax Guestuser")
-        {
-           let groupId = group['id'];
-           const groupMembers =  graph.groups.getById(groupId).expand("members")().then(group=>{
-            console.log(group.members);
-          });
-   
-        }
-      })
-    }).catch((err) => {
-      console.log("Error fetching Group ID "+err)});
-   
-  }*/
+ 
 
 
 
@@ -1077,72 +939,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     });
   }
 
-  public loadTable() {
-    //  ($('#LMSDashboard') as any).DataTable.destroy();
-    // ($('#LMSDashboard') as any).DataTable({
-    //   pageLength: 5,
-    //   "bSort": false,
-    //   "bDestroy": true,
-
-    //   lengthMenu: [[5, 10, 20, 50, -1], [5, 10, 20, 50, "All"]],
-
-    //   initComplete: function () {
-
-    //     this.api().columns().every(function () {
-
-    //       var column = this;
-
-    //       var select = $('<select><option value="">All</option></select>')
-
-    //         .appendTo($(column.header()).empty()).on('change', function () {
-
-    //           var val = ($ as any).fn.dataTable.util.escapeRegex(
-
-    //             ($(this) as any).val()
-
-    //           );
-
-    //           column.search(val ? '^' + val + '$' : '', true, false).draw();
-
-
-    //         });
-
-    //       column.data().unique().sort().each(function (d, j) {
-    //         // select.append('<option value="' + d + '</option>')
-    //         var temp2 = d;
-    //         if (temp2.indexOf(">") != -1) {
-    //           var temp = d.split(">");
-    //           var temporary = temp[3].split("<");
-
-    //           select.append('<option value="' + temporary[0] + '">' + temporary[0] + '</option>')
-    //         } else {
-    //           select.append('<option value="' + d + '">' + d + '</option>')
-
-    //         }
-
-
-
-    //       });
-
-
-    //     });
-
-    //   }
-
-    // });
-
-
-    {/*            column.data().unique().sort().each(function (d, j) {
-
-              select.append('<option value="' + d + '">' + d + '</option>')
-  
-            });
-  
-          });
-  
-        }
-  
-      });*/}
+  public loadTable() {  
 
 
     $.fn.dataTable.ext.errMode = "none";
@@ -1214,37 +1011,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
 
 
-    {/*var url = `https://tmxin.sharepoint.com/sites/POC/SPIP/_api/web/lists/getbytitle('BalanceCollection')/items?$select=CasualLeave,CasualLeaveBalance,EmployeeEmail,CasualLeaveUsed,SickLeave,SickLeaveUsed,SickLeaveBalance,OtherLeaveBalance,OtherLeave,OtherLeaveUsed,EarnedLeaveBalance,EarnedLeave,EarnedLeaveUsed,PaternityLeaveUsed,PaternityLeave,PaternityLeaveBalance,MaternityLeave,MaternityLeaveBalance,MaternityLeaveUsed&$filter('Author/EmployeeEmail eq '${this.state.email}'')`;
-  $.ajax({
-    url: url,
-    type: "GET",
-    async: false,
-    headers: { 'Accept': 'application/json; odata=verbose;' },
-    success: function (resultData) {
-      console.log(resultData);
-
-      reactHandler.setState({
-
-        LeaveBalanceItems: resultData.d.results
-      });
-
-
-      /*  for (var i = 0; i < resultData.d.results.length; i++) {
-          if (resultData.d.results[i].CasualLeaveUsed == "CasualLeaveUsed") {
-            CausalArr.push(resultData.d.results[i]);
-          }
-                
-        }
    
-        
-   //  var TotalCL = `${CausalArr.length}/${this.state.TotalCasualleave}`
-         var TotalCL = `${CausalArr.length}/${12}`
-          $("#casualLeave").html(TotalCL);
-    },
-    error: function (jqXHR, textStatus, errorThrown) {
-    }
-  });*/}
-
   }
   public GetLeaveDetails() {
     var reactHandler = this;
@@ -1265,16 +1032,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           reactHandler.loadTable();
         }, 1000);
 
-        {/* for (var i = 0; i < resultData.d.results.length; i++) {
-          if (resultData.d.results[i].LeaveType == "AnualLeave") {
-            AnnualArr.push(resultData.d.results[i]);
-
-
-          }
-        }
-
-        var TotalAnualLeave = `${AnnualArr.length}/${ttlAnnulLeave}`
-      $("#EarnedLeave").html(TotalAnualLeave)*/}
+      
       },
       error: function (jqXHR, textStatus, errorThrown) {
       }
@@ -1373,88 +1131,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
   }
 
 
-  // public Update_Blance_Count(result: any[], totaldaysapplied_leave: number, leavetype: string) {
-  //   //Earned Leave 
-  //   //Casual Leave 
-  //   //Sick Leave 
-  //   //Unpaid Leave 
-  //   //Maternity Leave 
-  //   //Paternity Leave
-  //   if (totaldaysapplied_leave == 0.5 || totaldaysapplied_leave == 1 || totaldaysapplied_leave == .5)
-  //     if (leavetype == "Casual Leave") {
-  //       var totalCasual_leave: number = result[0].CasualLeave
-  //       var casualleaveused: number = result[0].CasualLeaveUsed + totaldaysapplied_leave
-  //       var CasualLeave_blance: number = totalCasual_leave - casualleaveused
 
-  //       NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
-  //         CasualLeaveUsed: casualleaveused,
-  //         CasualLeaveBalance: CasualLeave_blance
-  //       })
-
-  //     } else if (leavetype == "Earned Leave") {
-  //       //EarnedLeaveUsed EarnedLeave EarnedLeaveBalance
-  //       var total_Earned_Leave: number = result[0].EarnedLeave
-  //       var Earned_leave_used = result[0].EarnedLeaveUsed + totaldaysapplied_leave
-  //       var Earned_Leave_blance: number = total_Earned_Leave - Earned_leave_used;
-
-  //       NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
-  //         EarnedLeaveUsed: Earned_leave_used,
-  //         EarnedLeaveBalance: Earned_Leave_blance
-  //       })
-
-  //     } else if (leavetype == "Sick Leave") {
-  //       //SickLeave SickLeaveUsed SickLeaveBalance
-
-  //       var total_sick_Leave: number = result[0].SickLeave
-  //       var sick_leave_used = result[0].SickLeaveUsed + totaldaysapplied_leave
-  //       var sick_blance: number = total_sick_Leave - sick_leave_used;
-
-  //       NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
-  //         SickLeaveUsed: sick_leave_used,
-  //         SickLeaveBalance: sick_blance
-  //       })
-  //     } else if (leavetype == "Unpaid Leave") {
-  //       //OtherLeaveUsed OtherLeaveBalance OtherLeave
-
-  //       var total_unpaid_Leave: number = result[0].OtherLeave
-  //       var unpaid_Leave: number = result[0].OtherLeaveUsed + totaldaysapplied_leave
-  //       var unpaid_Leave_blance: number = total_unpaid_Leave - unpaid_Leave;
-
-  //       NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
-  //         OtherLeaveUsed: unpaid_Leave,
-  //         OtherLeaveBalance: unpaid_Leave_blance
-  //       })
-  //     } else if (leavetype == "Maternity Leave") {
-  //       //MaternityLeaveBalance MaternityLeaveUsed MaternityLeave
-  //       var total_MaternityLeave: number = result[0].MaternityLeave
-  //       var MaternityLeave_used: number = result[0].MaternityLeaveUsed + totaldaysapplied_leave
-  //       var MaternityLeaveBalance: number = total_MaternityLeave - MaternityLeave_used;
-  //       NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
-  //         MaternityLeaveBalance: MaternityLeaveBalance,
-  //         MaternityLeaveUsed: MaternityLeave_used
-  //       })
-  //     } else if (leavetype == "Paternity Leave") {
-  //       //PaternityLeaveBalance PaternityLeaveUsed PaternityLeave
-
-
-  //       var Total_PaternityLeave: number = result[0].PaternityLeave;
-  //       var PaternityLeave_used: number = result[0].PaternityLeaveUsed + totaldaysapplied_leave;
-
-  //       var PaternityLeave_Balance: number = Total_PaternityLeave - PaternityLeave_used;
-  //       NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
-  //         PaternityLeaveBalance: PaternityLeave_Balance,
-  //         PaternityLeaveUsed: PaternityLeave_used
-  //       })
-  //     }
-
-  // }
   public Update_Blance_Count(result: any[], totaldaysapplied_leave: number, leavetype: string, LeaveStatus: any) {
-    //Earned Leave 
-    //Casual Leave 
-    //Sick Leave 
-    //Unpaid Leave 
-    //Maternity Leave 
-    //Paternity Leave
+   
     if (LeaveStatus != "Pending") {
       if (totaldaysapplied_leave == 0.5 || totaldaysapplied_leave == 1 || totaldaysapplied_leave == .5 || totaldaysapplied_leave >= 1) {
         if (leavetype == "Casual Leave") {
@@ -1509,9 +1188,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
   }
   public Cancel_Request_or_change_LeaveDate(itemidno: any, totalDays: any, StartDate: any, EndDate: any, LeaveType: any, LeaveStatus: any, items: any) {
-    // var startdate = moment(StartDate).format('DD-MM-YYYY')
-    // var endtdate = moment(EndDate).format('DD-MM-YYYY')
-    // var currentdate = moment().format('DD-MM-YYYY')
+    
 
 
     swal({
@@ -1652,110 +1329,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           this.Get_Blance_Count(totalDays, LeaveType, LeaveStatus)
         }
 
-        // swal({
-        //   title: ``,
-        //   text: "",
-        //   icon: "warning",
-        //   buttons: ["Cancel specific leave date", "Cancel this leave"],
-        //   dangerMode: true,
-        //   closeOnClickOutside: false,
-        //   showCloseButton: true,
-        //   showCancelButton: true
-        // } as any).then((willdelete) => {
-        //   if (willdelete) {
-
-        //     NewWeb.lists.getByTitle("LeaveRequest").items.getById(itemidno).update({
-        //       Status: "Cancelled"
-        //     }).then(() => {
-        //       NewWeb.lists.getByTitle("Leave Cancellation History").items.add({
-        //         LeaveType: items.LeaveType,
-        //         Day: items.Day,
-        //         Time: items.Time,
-        //         StartDate: items.StartDate,
-        //         EndDate: items.EndDate,
-        //         Reason: items.Reason,
-        //         Requester: items.Requester,
-        //         AppliedDate: items.AppliedDate,
-        //         Days: items.Days,
-        //         EmployeeEmail: items.EmployeeEmail,
-        //         RequestSessionMasterID: items.RequestSessionMasterID,
-        //         Approver: items.Approver,
-        //         ApproverEmail: items.ApproverEmail,
-        //         CompOff: items.CompOff,
-        //         ManagerComments: items.ManagerComments,
-        //         Status: "Cancelled"
-        //       })
-        //     })
-        //     this.Get_Blance_Count(totalDays, LeaveType, LeaveStatus)
-
-        //     // 
-        //   } else {
-        //     // $(".popup_show").show()
-        //     Swal.fire({
-        //       title: "<p>Select Date</p>",
-        //       html: "<input type='date' id='cancelation_date' />",
-        //       confirmButtonText: "Submit",
-        //       customClass: {
-        //         container: 'cancel-date',
-        //       },
-        //       showCloseButton: true,
-        //       allowOutsideClick: true,
-        //       preConfirm: () => {
-        //         var selectedDate = $("#cancelation_date").val();
-        //         if (selectedDate == "") {
-        //           Swal.showValidationMessage("Please select a date");
-        //         }
-        //         return selectedDate;
-        //       },
-        //     }).then((result) => {
-        //       if (result.isConfirmed) {
-        //         var CurrentDate = moment().format("YYYY-MM-DD")
-        //         var SelectedDate = $("#cancelation_date").val()
-        //         if (SelectedDate != "") {
-        //           if (CurrentDate != SelectedDate) {
-        //             this.updateLeaveDates(SelectedDate)
-        //           } else {
-        //             swal({
-        //               text: "Don't select the current date",
-        //               icon: "error"
-        //             });
-        //           }
-        //         }
-        //       }
-        //     });
-
-
-
-        //     //this.Change_leave_Date_or_Cancel_Leave(totalDays, LeaveType)
-        //     // Parse the start and end dates
-        //     updateDateIdNo = itemidno;
-        //     TotalDaysLeaveApplied = totalDays;
-        //     LeaveTypee = LeaveType;
-        //     LeaveStatuss = LeaveStatus;
-        //     SpecificDate = items
-        //     console.log(SpecificDate)
-        //     var startDate = new Date(StartDate);
-        //     var endDate = new Date(EndDate);
-        //     $('#cancelation_date').attr('min', StartDate);
-        //     $('#cancelation_date').attr('max', EndDate);
-
-        //     // Array to store the dates in between
-        //     datesInRange = [];
-        //     InBetweenDates = [];
-        //     // Iterate through the dates and add them to the array
-        //     for (var currentDate = startDate; currentDate <= endDate; currentDate.setDate(currentDate.getDate() + 1)) {
-        //       // Format the date as "YYYY-MM-DD" and push to the array
-        //       var formattedDate = currentDate.toISOString().split('T')[0];
-        //       datesInRange.push(formattedDate);
-        //     }
-
-        //     // console.log(datesInRange);
-        //     InBetweenDates = datesInRange.slice(1, -1);
-        //     // console.log(InBetweenDates)
-        //   }
-
-
-        // })
       }
     })
 
@@ -1809,23 +1382,13 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       })
 
     } else {
-      // console.log("Don't select inbetween dates")
       swal({
         text: "Don't select inbetween date",
         icon: "error"
       });
     }
   }
-  // public Change_leave_Date_or_Cancel_Leave(totaldays_leave: any, LeaveType: any) {
-  //   let currentYear = new Date().getFullYear()
-  //   NewWeb.lists.getByTitle("BalanceCollection").items.select("Id", "*", "EmployeeEmail").filter(`EmployeeEmail eq '${this.state.Empemail}' and Year eq ${currentYear}`).get()
-  //     .then((results) => {
-  //       if (results.length != 0) {
-
-  //       }
-  //     })
-
-  // }
+ 
   public showLeaveMgmtDashboard() {
     this.setState({
       LeaveMgmtDashboard: true,
@@ -2078,7 +1641,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
               <div className="notification-part">
                 <ul>
                   <li className="person-details">
-                    {/*<span id="CurrentUser-Profilepicture"> <img src={`${this.state.CurrentUserProfilePic}`} alt="image" /> <span>  </span>  </span>*/}
                     <span id="CurrentUser-displayname">{this.state.CurrentUserName}</span>
                     <a href="#" onClick={this.logout}><img src={require("../img/logout.png")} /></a>
                   </li>
@@ -2109,10 +1671,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                   <ul className="nav nav-pills">
                     <li className="active"><a data-toggle="pill" href="#home">Dashboard</a></li>
 
-                    {/* <li><a data-toggle="pill" href="#menu1">Calender</a></li>
-                <li><a data-toggle="pill" href="#menu2">Department</a></li>*/}
+                   
                   </ul>
-                  {/* <td><a href="#" onClick={() => handler.View(item.Id)}>View</a></td>*/}
                   {this.state.IsAdmin == true &&
 
                     <a href="${this.props.siteurl}/Lists/LeaveRequest/Approvedlist.aspx" className="btn btn-outline leave-req-link " id="submit">View leave list</a>
@@ -2209,8 +1769,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                     <div className="table-wrap">
                       <div className="table-search-wrap clearfix">
                         <div className="table-search relative">
-                          {/* <input type="text" placeholder="Search Here" className="" />
-                      <img src="https://tmxin.sharepoint.com/sites/POC/SPIP/SiteAssets/LeavePortal/img/search.svg" alt="image" />*/}
+                         
                         </div>
 
                       </div>
@@ -2265,25 +1824,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
                 </div>
 
-                {/* <div style={{ display: "none" }} className="popup_show leave_overlay">
-              <div id="input-cancel-form" className="overlay_popup_comment">
-                <div className="clearfix">
-                  <img title="close" src="https://etccgov.sharepoint.com/sites/CompanyApplication/SiteAssets/ETCC/IMAGES/img/close.svg" style={{ float: "right" }} className="cancel_email_btn" /></div>
-                <div className="create_details">
-                  <div className="row">
-                    <div className="col-md-3">
-                      <label>  Select Date  <i className="required">*</i> </label>
-                      <input type='date' id='cancelation_date' className="form-control start-date" autoComplete='off'></input>
-
-                    </div>
-                    
-                  </div>
-                </div>
-                <div className="create_btn">
-                  <button className="submit_btn reject-btn" onClick={() => this.updateLeaveDates()}>Submit</button>
-                </div>
-              </div>
-            </div> */}
+              
               </div>
             </div>
           </div>

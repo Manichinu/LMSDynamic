@@ -9,8 +9,6 @@ import { Web } from '@pnp/sp/webs';
 
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
-//import "datatables.net-dt/js/dataTables.dataTables";
-//import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -24,7 +22,6 @@ import PermissionRequest from './PermissionRequest';
 let ItemId;
 var CurrentUSERNAME = "";
 var Usertype = "";
-// const NewWeb = Web('https://tmxin.sharepoint.com/sites/ER/');
 let NewWeb: any;
 
 export interface AboutusState {
@@ -61,9 +58,7 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
             `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
         );
 
-        // SPComponentLoader.loadCss(
-        //     `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-        // );
+       
         SPComponentLoader.loadScript(
             `https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js`
         );

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
-// import { IPermissionDashboardState } from './IPermissionDashboardState';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { SPComponentLoader } from "@microsoft/sp-loader";
 import { sp } from "@pnp/sp";
@@ -9,8 +8,7 @@ import { Web } from '@pnp/sp/webs';
 
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
-//import "datatables.net-dt/js/dataTables.dataTables";
-//import "datatables.net-dt/css/jquery.dataTables.min.css";
+
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
@@ -25,7 +23,6 @@ import "../css/style.css"
 let ItemId;
 var CurrentUSERNAME = "";
 var Usertype = "";
-// const NewWeb = Web('https://tmxin.sharepoint.com/sites/ER/');
 let NewWeb: any;
 
 export interface PermissionDashboardState {
@@ -72,9 +69,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
     );
 
-    // SPComponentLoader.loadCss(
-    //   `${this.props.siteurl}/SiteAssets/LeavePortal/css/style.css?v=1.14`
-    // );
+    
 
 
     sp.setup({
@@ -97,45 +92,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     NewWeb = Web("" + this.props.siteurl + "")
 
   }
-  // public async isOwnerGroupMember() {
-  //   var reacthandler = this;
-  //   let userDetails = await this.spLoggedInUser(this.props.context);
-
-  //   let userID = userDetails.Id;
-  //   console.log(userID);
-  //   $.ajax({
-
-  //     // url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq  + ${this.props.userId}`,
-  //     url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
-
-  //     type: "GET",
-
-  //     headers: { 'Accept': 'application/json; odata=verbose;' },
-
-  //     success: function (resultData) {
-
-  //       if (resultData.d.results.length == 0) {
-  //         console.log("User not in group : LMS Admin Owners");
-  //         setTimeout(() => {
-  //           reacthandler.GetUserlistitems();
-  //         }, 1000);
-
-  //       } else {
-  //         console.log("User in group : LMS Admin Owners");
-  //         setTimeout(() => {
-  //           reacthandler.GetAdminlistitems();
-  //         }, 1000);
-  //       }
-
-  //     },
-
-  //     error: function (jqXHR, textStatus, errorThrown) {
-  //       console.log("Error while checking user in Owner's group");
-  //     }
-
-  //   });
-
-  // }
+ 
   public async isOwnerGroupMember() {
     var reacthandler = this;
     let userDetails = await this.spLoggedInUser(this.props.context);
@@ -144,7 +101,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     console.log(userID);
     $.ajax({
 
-      // url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq  + ${this.props.userId}`,
       url: `${reacthandler.props.siteurl}/_api/web/sitegroups/getByName('LMS Admin')/Users?$filter=Id eq ${userID}`,
 
       type: "GET",
@@ -225,7 +181,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     var reactHandler = this;
 
     NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "EmployeeEmail", "Reason", "Status").filter(`Author/Id eq ${this.props.userId}`).orderBy("Created", false).top(5000).get()
-      //NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester","EmployeeEmail", "Reason", "Status").filter("EmployeeEmail eq '" + this.state.Empemail + "'").orderBy("Created", false).top(5000).get()
 
       .then((items: any) => {
         if (items.length != 0) {
@@ -250,7 +205,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     var reactHandler = this;
 
     NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "EmployeeEmail", "Reason", "Status").orderBy("Created", false).top(5000).get()
-      //NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester","EmployeeEmail", "Reason", "Status").filter("EmployeeEmail eq '" + this.state.Empemail + "'").orderBy("Created", false).top(5000).get()
 
       .then((items: any) => {
         if (items.length != 0) {
@@ -289,7 +243,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
         });
 
     } else {
-      //if (UserType =="Admin") {
       await NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "EmployeeEmail", "Reason", "Status").orderBy("Created", false).top(5000).get()
 
         .then((items: any) => {
@@ -320,7 +273,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
       let userID = user.Id;
       this.setState({ CurrentUserId: userID });
     }, (errorResponse: any) => {
-      //console.log(errorResponse);
     }
     );
   }
@@ -343,12 +295,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     let userID = userDetails.Id;
     this.setState({ CurrentUserId: userID });
     await this.isOwnerGroupMember();
-    //await this.GetListitems();
-    // console.log("User Type:"+Usertype);
-    // this.Checkusertype(Usertype);
-
-
-    //  this.loadTable();
+   
     $(document).on('click', '#permission-dashboard', () => {
       this.setState({
         PermissionDashboard: true,
@@ -359,8 +306,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
   }
   public GetPermissionDetails() {
     var reactHandler = this;
-    //  AnnualArr = [];
-    //SickArr = [];
+    
 
     var url = "" + this.props.siteurl + "/_api/web/lists/getbytitle('EmployeePermission')/items?$select=PermissionHour,TimeUpto,PermissionOn,timefromwhen,Requester,Reason,Status&$orderby=Created desc";
 
@@ -381,16 +327,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
           reactHandler.loadTable();
         }, 1000);
 
-        {/* for (var i = 0; i < resultData.d.results.length; i++) {
-          if (resultData.d.results[i].LeaveType == "AnualLeave") {
-            AnnualArr.push(resultData.d.results[i]);
-
-
-          }
-        }
-
-        var TotalAnualLeave = `${AnnualArr.length}/${ttlAnnulLeave}`
-      $("#annualLeave").html(TotalAnualLeave)*/}
+       
       },
       error: function (jqXHR, textStatus, errorThrown) {
       }
@@ -403,7 +340,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     for (var i = 0; i < groups.length; i++) {
       if (groups[i].Title == 'LMS Admin') {
         UserType = "Admin";
-        // this.setState({ IsAdmin: true });
 
         console.log(UserType);
         Usertype = UserType;
@@ -418,47 +354,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     }
 
     return Usertype;
-    {/*if (UserType =="User") {
-
-      await NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "Reason", "Status").filter(`Author/Id eq ${this.state.CurrentUserId}`).orderBy("Created", false).top(5000).get()
-        .then((items) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else{
-            this.loadTable();
-          }
-     
-        });
-
-    } else {
-     //if (UserType =="Admin") {
-
-      await NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "Reason", "Status").orderBy("Created", false).top(5000).get()
-
-        .then((items) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else{
-            this.loadTable();
-          }
-     
-        });
-
-    }*/}
-
+   
   }
 
 
@@ -486,7 +382,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     });
   }
   public loadTable() {
-    //($('#LMSDashboard') as any).DataTable.destroy();
 
     ($('#LMSDashboard') as any).DataTable({
       pageLength: 5,
@@ -500,7 +395,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
         this.api().columns().every(function () {
 
           var column = this;
-          //  var select = $('<select class="form-control"><option value="">All</option></select>')
           var select = $('<select><option value="">All</option></select>')
 
             .appendTo($(column.header()).empty()).on('change', function () {
@@ -535,7 +429,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
       }
 
     });
-    //  }, 500);
 
   }
   public Cancel_Request_(itemidno: number) {
@@ -619,9 +512,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
               </>
             }
           </td>
-          {/* <td>{moment(item.TimeUpto, "YYYY-MM-DDTHH:mm").format('DD-MM-YYYY hh:mm A')}</td>   
-          <td>{moment(item.timefromwhen,"YYYY-MM-DDTHH:mm").format('DD-MM-YYYY hh:mm A')}</td>
-          <td><a href="#" onClick={() => handler.View(item.Id)}>View</a></td>*/}
+          
         </tr>
 
       );
@@ -652,8 +543,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
                     <div className="table-wrap">
                       <div className="table-search-wrap clearfix">
                         <div className="table-search relative">
-                          {/* <input type="text" placeholder="Search Here" className="" />
-                      <img src="https://tmxin.sharepoint.com/sites/POC/SPIP/SiteAssets/LeavePortal/img/search.svg" alt="image" />*/}
+
                         </div>
 
                       </div>
