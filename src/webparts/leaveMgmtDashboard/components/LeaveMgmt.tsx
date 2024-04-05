@@ -1005,7 +1005,8 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                         RequestSessionMasterID: this.state.LeaveID,
                                         Approver: Approver_Manager_Details[0].ApproverName,
                                         ApproverEmail: Approver_Manager_Details[0].ApproverEmail,
-                                        CompOff: CompOffDates
+                                        CompOff: CompOffDates,
+                                        Status: "Pending"
                                         // LRAttachments: finalurl
                                     })
                                         .then((item: any) => {
@@ -1111,7 +1112,9 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                             RequestSessionMasterID: this.state.LeaveID,
                                             Approver: Approver_Manager_Details[0].ApproverName,
                                             ApproverEmail: Approver_Manager_Details[0].ApproverEmail,
-                                            CompOff: CompOffDates
+                                            CompOff: CompOffDates,
+                                            Status: "Pending"
+
 
                                         })
                                             .then((item: any) => {
@@ -1200,7 +1203,8 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                             RequestSessionMasterID: this.state.LeaveID,
                                             Approver: Approver_Manager_Details[0].ApproverName,
                                             ApproverEmail: Approver_Manager_Details[0].ApproverEmail,
-                                            CompOff: CompOffDates
+                                            CompOff: CompOffDates,
+                                            Status: "Pending"
 
 
                                         })
