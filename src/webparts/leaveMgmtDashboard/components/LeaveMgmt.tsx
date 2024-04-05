@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useState, useEffect } from "react";
-import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { SPComponentLoader } from "@microsoft/sp-loader";
@@ -1632,7 +1631,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         });
 
         return (
-            <div className={styles.leaveMgmt} >
+            <div>
 
                 <div className="container">
                     <div className="dashboard-wrap">

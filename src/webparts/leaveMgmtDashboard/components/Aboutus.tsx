@@ -1,5 +1,5 @@
 import * as React from 'react';
-import styles from './LeaveMgmtDashboard.module.scss';
+// import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
 // import { IPermissionDashboardState } from './IPermissionDashboardState';
 import { escape } from '@microsoft/sp-lodash-subset';

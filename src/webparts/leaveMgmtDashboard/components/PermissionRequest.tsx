@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import "@pnp/sp/lists";
@@ -24,7 +23,7 @@ var PreviousLeaveRequestDates: any[] = [];
 var PreviousPermissionRequestDates = [];
 let IsValidReqularRequest = false;
 var Approver_Manager_Details: any = []
-let NewWeb:any;
+let NewWeb: any;
 
 export interface IPermissionRequestState {
   startDate: any;
@@ -63,7 +62,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.js`
     );
 
-  
+
     this.state = {
 
       startDate: new Date(),
@@ -213,7 +212,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     var selectedhr: any = $('#ddl-Permissionhr').val();
 
     var selectedtime = this.state.startDate;
-    
+
     var calculatedtime = moment(selectedtime, "YYYY-MM-DDTHH:mm").add(selectedhr, 'hours').format('D-MM-YYYY hh:mm A');
 
     $("#txt-EndDate").val(calculatedtime);
@@ -231,10 +230,10 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
 
   }
   public _spLoggedInUserDetails() {
-    NewWeb.currentUser.get().then((user:any) => {
+    NewWeb.currentUser.get().then((user: any) => {
       let userID = user.Id;
       this.setState({ CurrentUserId: userID });
-    }, (errorResponse:any) => {
+    }, (errorResponse: any) => {
 
     }
     );
@@ -301,7 +300,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     } else if (Formstatus == false && startdate == "") {
       ErrorMsg = "Please Select StartDate";
       Formstatus = true;
-    
+
 
     } else if (Formstatus == false && Reason == "") {
       ErrorMsg = "Please Enter Reason";
@@ -402,11 +401,11 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
           EmployeeEmail: this.state.Email,
           Approver: Approver_Manager_Details[0].ApproverName,
           ApproverEmail: Approver_Manager_Details[0].ApproverEmail,
-          Status:"Pending"
+          Status: "Pending"
 
         })
 
-          .then((item:any) => {
+          .then((item: any) => {
 
             let ID = item.data.Id;
 
@@ -415,7 +414,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
               icon: "success",
 
             }).then(() => {
-              
+
               location.reload()
 
             });
@@ -440,7 +439,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     var currentYear = new Date().getFullYear()
     let nextYear = currentYear + 1
     NewWeb.lists.getByTitle("BalanceCollection").items.select("ID", "*", "CasualLeaveBalance", "EmployeeEmail", "Manager/Title", "Manager/EMail").expand("Manager").filter(`EmployeeEmail eq '${EmployeeEmailid}'`).get()
-      .then((result:any) => {
+      .then((result: any) => {
         if (result.length != 0) {
           console.log(result);
 
@@ -456,7 +455,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
   public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
 
     return (
-      <div className={styles.permissionRequest} >
+      <div>
 
         <div className="container">
           <div className="dashboard-wrap">
@@ -483,10 +482,10 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
                         dateFormat="d-MM-yyyy h:mm aa"
 
                       />
-                  
+
 
                       <span className="floating-label ">Permission on</span>
-                     
+
 
                     </div>
                   </div>

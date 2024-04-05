@@ -1,5 +1,4 @@
 import * as React from 'react';
-import styles from './LeaveMgmtDashboard.module.scss';
 import { ILeaveMgmtDashboardProps } from './ILeaveMgmtDashboardProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { SPComponentLoader } from "@microsoft/sp-loader";
@@ -450,7 +449,7 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
         return (
             <>
 
-                <div className={styles.permissionDashboard} >
+                <div>
                     <div className="container">
                         <div className="dashboard-wrap">
 

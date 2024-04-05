@@ -109,7 +109,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
     );
 
-   
+
 
 
     sp.setup({
@@ -177,7 +177,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
     });
 
-  }  
+  }
+
   public async componentDidMount() {
     this.GetCurrentUserDetails();
     this.checkConfiguredOrNot();
@@ -192,7 +193,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     this.setState({ CurrentUserId: userID });
 
     await this.isOwnerGroupMember();
-    
+
 
   }
   public async checkConfiguredOrNot() {
@@ -814,7 +815,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       }
     }
     console.log(UserType);
-   
+
 
   }
 
@@ -839,7 +840,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     }
 
     return Usertype;
- 
+
 
 
   }
@@ -914,7 +915,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       }
     });
   }
- 
+
 
 
 
@@ -939,7 +940,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     });
   }
 
-  public loadTable() {  
+  public loadTable() {
 
 
     $.fn.dataTable.ext.errMode = "none";
@@ -1011,7 +1012,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
 
 
-   
+
   }
   public GetLeaveDetails() {
     var reactHandler = this;
@@ -1032,7 +1033,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           reactHandler.loadTable();
         }, 1000);
 
-      
+
       },
       error: function (jqXHR, textStatus, errorThrown) {
       }
@@ -1133,7 +1134,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
 
   public Update_Blance_Count(result: any[], totaldaysapplied_leave: number, leavetype: string, LeaveStatus: any) {
-   
+
     if (LeaveStatus != "Pending") {
       if (totaldaysapplied_leave == 0.5 || totaldaysapplied_leave == 1 || totaldaysapplied_leave == .5 || totaldaysapplied_leave >= 1) {
         if (leavetype == "Casual Leave") {
@@ -1188,7 +1189,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
   }
   public Cancel_Request_or_change_LeaveDate(itemidno: any, totalDays: any, StartDate: any, EndDate: any, LeaveType: any, LeaveStatus: any, items: any) {
-    
+
 
 
     swal({
@@ -1388,7 +1389,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       });
     }
   }
- 
+
   public showLeaveMgmtDashboard() {
     this.setState({
       LeaveMgmtDashboard: true,
@@ -1671,7 +1672,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                   <ul className="nav nav-pills">
                     <li className="active"><a data-toggle="pill" href="#home">Dashboard</a></li>
 
-                   
+
                   </ul>
                   {this.state.IsAdmin == true &&
 
@@ -1769,7 +1770,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                     <div className="table-wrap">
                       <div className="table-search-wrap clearfix">
                         <div className="table-search relative">
-                         
+
                         </div>
 
                       </div>
@@ -1824,7 +1825,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
                 </div>
 
-              
+
               </div>
             </div>
           </div>
