@@ -3,7 +3,7 @@
   "solution": {
     "name": "leave-mgmt-client-side-solution",
     "id": "23f81cf6-f9ad-4cce-9628-815f1ed9a3fd",
-    "version": "3.0.0.3",
+    "version": "3.0.0.4",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
     "developer": {
