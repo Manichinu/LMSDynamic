@@ -35,6 +35,7 @@ import PermissionDashboard from './PermissionDashboard';
 import PermissionRequest from './PermissionRequest';
 import Aboutus from './Aboutus';
 import ApprovalDashboard from './Approvals';
+import PermissionApprovalDashboard from './PermissionApprovals';
 import "../css/style";
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
@@ -83,6 +84,7 @@ export interface LeaveMgmtDashboardState {
   AboutUs: boolean;
   Configure: boolean;
   Approvals: boolean;
+  PermissionApprovalDashboard: boolean;
 }
 
 export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashboardProps, LeaveMgmtDashboardState> {
@@ -139,7 +141,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionRequest: false,
       AboutUs: false,
       Configure: false,
-      Approvals: false
+      Approvals: false,
+      PermissionApprovalDashboard: false
     };
     NewWeb = Web("" + this.props.siteurl + "")
 
@@ -1859,6 +1862,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionDashboard: false,
       PermissionRequest: false,
       AboutUs: false,
+      PermissionApprovalDashboard: false,
       Approvals: false
 
     })
@@ -1871,6 +1875,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionDashboard: false,
       PermissionRequest: false,
       AboutUs: false,
+      PermissionApprovalDashboard: false,
       Approvals: false
 
     })
@@ -1883,6 +1888,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionDashboard: false,
       PermissionRequest: false,
       AboutUs: false,
+      PermissionApprovalDashboard: false,
       Approvals: false
 
     })
@@ -1895,6 +1901,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionDashboard: true,
       PermissionRequest: false,
       AboutUs: false,
+      PermissionApprovalDashboard: false,
       Approvals: false
 
     })
@@ -1907,6 +1914,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionDashboard: false,
       PermissionRequest: true,
       AboutUs: false,
+      PermissionApprovalDashboard: false,
       Approvals: false
 
     })
@@ -1919,6 +1927,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionDashboard: false,
       PermissionRequest: false,
       AboutUs: true,
+      PermissionApprovalDashboard: false,
       Approvals: false
 
     })
@@ -1931,53 +1940,21 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       PermissionDashboard: false,
       PermissionRequest: false,
       AboutUs: false,
+      PermissionApprovalDashboard: false,
       Approvals: true
     })
   }
-  public Approve(id: any) {
-    Swal.fire({
-      title: "<p>Comments</p>",
-      html: "<textarea id='comments' /></textarea>",
-      confirmButtonText: "Submit",
-      customClass: {
-        container: 'cancel-date',
-      },
-      showCloseButton: true,
-      allowOutsideClick: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        NewWeb.lists.getByTitle("LeaveRequest").items.getById(id).update({
-          Status: "Approved",
-          ManagerComments: $("#comments").val()
-        })
-      }
-    });
-  }
-  public Reject(id: any) {
-    Swal.fire({
-      title: "<p>Comments</p>",
-      html: "<textarea id='comments' /></textarea>",
-      confirmButtonText: "Submit",
-      customClass: {
-        container: 'cancel-date',
-      },
-      showCloseButton: true,
-      allowOutsideClick: true,
-      preConfirm: () => {
-        var Comments = $("#comments").val();
-        if (Comments == "") {
-          Swal.showValidationMessage("Please enter a comment");
-        }
-        return Comments;
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        NewWeb.lists.getByTitle("LeaveRequest").items.getById(id).update({
-          Status: "Rejected",
-          ManagerComments: $("#comments").val()
-        })
-      }
-    });
+  public showPermissionApprovalsDashboard() {
+    this.setState({
+      LeaveMgmtDashboard: false,
+      Holiday: false,
+      LeaveMgmt: false,
+      PermissionDashboard: false,
+      PermissionRequest: false,
+      AboutUs: false,
+      Approvals: false,
+      PermissionApprovalDashboard: true
+    })
   }
   public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
     let count = 0;
@@ -2143,7 +2120,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
               <li className={this.state.AboutUs == true ? "active" : ""} onClick={() => this.showAboutus()}> About  </li>
               <li className={this.state.Holiday == true ? "active" : ""} onClick={() => this.showHoliday()}> Holidays  </li>
               <li className={this.state.PermissionDashboard == true ? "active" : ""} onClick={() => this.showPermissionDashboard()} id='permission-dashboard'> Permission  </li>
-              <li className={this.state.Approvals == true ? "active" : ""} onClick={() => this.showApprovalsDashboard()}> Approvals  </li>
+              <li className={this.state.Approvals == true ? "active" : ""} onClick={() => this.showApprovalsDashboard()}>Leave Approvals  </li>
+              <li className={this.state.PermissionApprovalDashboard == true ? "active" : ""} onClick={() => this.showPermissionApprovalsDashboard()}> Permission Approvals  </li>
 
             </ul>
           </nav>
@@ -2359,6 +2337,10 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         }
         {this.state.Approvals == true &&
           <ApprovalDashboard description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+
+        }
+        {this.state.PermissionApprovalDashboard == true &&
+          <PermissionApprovalDashboard description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
       </>

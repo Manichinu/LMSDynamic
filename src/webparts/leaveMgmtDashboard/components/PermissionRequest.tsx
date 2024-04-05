@@ -427,6 +427,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
           EmployeeEmail: this.state.Email,
           Approver: Approver_Manager_Details[0].ApproverName,
           ApproverEmail: Approver_Manager_Details[0].ApproverEmail,
+          Status:"Pending"
 
         })
 
