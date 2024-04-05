@@ -314,7 +314,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                                 Half Day / Full Day       : ${items[0].Day}<br/><br/>
                                 Start Date                : ${items[0].StartDate}<br/><br/>
                                 End Date                  : ${items[0].EndDate}<br/><br/>
-                                Compensation Date         : ${items[0].CompOff}<br/><br/>
+                                Compensation Date         : ${items[0].CompOff != null ? items[0].CompOff : "-"}<br/><br/>
                                 Reason                    : ${items[0].Reason}<br/><br/>
                                 Manager Comments (if any) : ${items[0].ManagerComments}<br/><br/>`,
                                 AdditionalHeaders: {
@@ -373,7 +373,7 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                             Half Day / Full Day       : ${items[0].Day}<br/><br/>
                             Start Date                : ${items[0].StartDate}<br/><br/>
                             End Date                  : ${items[0].EndDate}<br/><br/>
-                            Compensation Date         : ${items[0].CompOff}<br/><br/>
+                            Compensation Date         : ${items[0].CompOff != null ? items[0].CompOff : "-"}<br/><br/>
                             Reason                    : ${items[0].Reason}<br/><br/>
                             Manager Comments (if any) : ${items[0].ManagerComments}<br/><br/>`,
                                 AdditionalHeaders: {

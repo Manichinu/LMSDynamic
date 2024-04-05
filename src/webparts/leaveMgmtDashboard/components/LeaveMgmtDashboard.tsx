@@ -190,37 +190,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
   }
 
   public async componentDidMount() {
-
     this.GetCurrentUserDetails();
     this.checkConfiguredOrNot();
-    // const emailProps: IEmailProperties = {
-    //   To: ['mani2@6z0l7v.onmicrosoft.com'],
-    //   Subject: 'Test Email',
-    //   Body: 'This is a test email sent from SPFx using PnPjs.',
-    //   AdditionalHeaders: {
-    //     "content-type": "text/html"
-    //   }
-    // };
-
-    // await sp.utility.sendEmail(emailProps)
-    //   .then((result) => {
-    //     console.log(result)
-    //     Swal.fire('Success', 'Email sent successfully.', 'success')
-    //   })
-    // NewWeb.lists.getByTitle("BalanceCollection").fields.addCalculated("My Field", {
-    //   Formula: "=1+1",
-    //   Group: "MyGroup"
-    // });
-    // this.checkIfListExists();
-    // this.createSitePage();
-    // this.createGroup();
-    // this.createLeaveRequestList();
-    // this.createLeaveCancellationHistoryList();
-    // this.createEmployeePermissionList();
-    // this.createBalanceCollectionList();
-    // this.createHolidayCollectionList();
-    // this.createLeaveTypeCollectionList();
-    // NewWeb.lists.getByTitle("BalanceCollection").fields.getByTitle("CasualLeaveBalance").update({ Formula: "=1+1" },);
+   
 
     const url: any = new URL(window.location.href);
     url.searchParams.get("ItemID");
