@@ -310,6 +310,13 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
                                 .then((result) => {
                                     console.log(result)
                                 })
+                            NewWeb.lists.getByTitle("BalanceCollection").items.select("Id", "*", "EmployeeEmail").filter(`EmployeeEmail eq '${this.state.Empemail}'`).get()
+                                .then((results: any) => {
+                                    if (results.length != 0) {
+                                        this.Update_Blance_Count(results, items[0].Days, items[0].LeaveType, items[0].Status)
+
+                                    }
+                                })
                         });
                 }).then(() => {
                     swal({
@@ -381,7 +388,61 @@ export default class ApprovalDashboard extends React.Component<ILeaveMgmtDashboa
             }
         });
     }
+    public Update_Blance_Count(result: any[], totaldaysapplied_leave: number, leavetype: string, LeaveStatus: any) {
 
+        if (LeaveStatus != "Pending") {
+            if (totaldaysapplied_leave == 0.5 || totaldaysapplied_leave == 1 || totaldaysapplied_leave == .5 || totaldaysapplied_leave >= 1) {
+                if (leavetype == "Casual Leave") {
+                    var casualleaveused: number = result[0].CasualLeaveUsed + totaldaysapplied_leave
+
+                    NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
+                        CasualLeaveUsed: casualleaveused,
+                    })
+
+                } else if (leavetype == "Earned Leave") {
+                    //EarnedLeaveUsed EarnedLeave EarnedLeaveBalance
+                    var Earned_leave_used = result[0].EarnedLeaveUsed + totaldaysapplied_leave
+
+                    NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
+                        EarnedLeaveUsed: Earned_leave_used,
+                    })
+
+                } else if (leavetype == "Sick Leave") {
+                    //SickLeave SickLeaveUsed SickLeaveBalance
+
+                    var sick_leave_used = result[0].SickLeaveUsed + totaldaysapplied_leave
+
+                    NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
+                        SickLeaveUsed: sick_leave_used,
+                    })
+                } else if (leavetype == "Unpaid Leave") {
+                    //OtherLeaveUsed OtherLeaveBalance OtherLeave
+
+                    var unpaid_Leave: number = result[0].OtherLeaveUsed + totaldaysapplied_leave
+
+                    NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
+                        OtherLeaveUsed: unpaid_Leave,
+                    })
+                } else if (leavetype == "Maternity Leave") {
+                    //MaternityLeaveBalance MaternityLeaveUsed MaternityLeave
+                    var MaternityLeave_used: number = result[0].MaternityLeaveUsed + totaldaysapplied_leave
+                    NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
+                        MaternityLeaveUsed: MaternityLeave_used
+                    })
+                } else if (leavetype == "Paternity Leave") {
+                    //PaternityLeaveBalance PaternityLeaveUsed PaternityLeave
+
+
+                    var PaternityLeave_used: number = result[0].PaternityLeaveUsed + totaldaysapplied_leave;
+
+                    NewWeb.lists.getByTitle("BalanceCollection").items.getById(result[0].ID).update({
+                        PaternityLeaveUsed: PaternityLeave_used
+                    })
+                }
+            }
+        }
+
+    }
     public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
         let count = 0;
         let handler = this;

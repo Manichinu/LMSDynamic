@@ -60,6 +60,8 @@ var SpecificDate: any;
 var NewWeb: any;
 let progressEndValue = 100;
 let overAllValue = 0;
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1000;
 
 export interface LeaveMgmtDashboardState {
   DatatableItems: any[];
@@ -320,7 +322,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -331,7 +333,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -339,7 +341,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -372,6 +374,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       { Name: "RequestSessionMasterID", Type: "SingleLine" },
       { Name: "ApproverEmail", Type: "SingleLine" },
       { Name: "CompOff", Type: "MultiLine" },
+      { Name: "CancelledBy", Type: "SingleLine" },
 
     ]
     await NewWeb.lists.add(ListName).then(() => {
@@ -382,7 +385,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -393,7 +396,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -401,7 +404,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -440,7 +443,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -451,7 +454,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -459,7 +462,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -472,102 +475,102 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       });
     })
   }
-  public async createBalanceCollectionList() {
-    var ListName = "BalanceCollection";
-    var batch = NewWeb.createBatch();
-    var Columns = [
-      { Name: "EmployeeEmail", Type: "SingleLine" },
-      { Name: "Year", Type: "SingleLine" },
-      { Name: "SickLeave", Type: "Number" },
-      { Name: "SickLeaveUsed", Type: "Number" },
-      { Name: "OtherLeave", Type: "Number" },
-      { Name: "EmployeeName", Type: "SingleLine" },
-      { Name: "CasualLeave", Type: "Number" },
-      { Name: "CasualLeaveUsed", Type: "Number" },
-      { Name: "OtherLeaveUsed", Type: "Number" },
-      { Name: "MaternityLeave", Type: "Number" },
-      { Name: "MaternityLeaveUsed", Type: "Number" },
-      { Name: "PaternityLeave", Type: "Number" },
-      { Name: "PaternityLeaveUsed", Type: "Number" },
-      { Name: "SickLeaveBalance", Type: "Calculated", Formula: "=(SickLeave-SickLeaveUsed)" },
-      { Name: "OtherLeaveBalance", Type: "Calculated", Formula: "=(OtherLeave-OtherLeaveUsed)" },
-      { Name: "PaternityLeaveBalance", Type: "Calculated", Formula: "=(PaternityLeave-PaternityLeaveUsed)" },
-      { Name: "MaternityLeaveBalance", Type: "Calculated", Formula: "=(MaternityLeave-MaternityLeaveUsed)" },
-      { Name: "CasualLeaveBalance", Type: "Calculated", Formula: "=(CasualLeave-CasualLeaveUsed)" },
-      { Name: "EarnedLeave", Type: "Number" },
-      { Name: "EarnedLeaveUsed", Type: "Number" },
-      { Name: "EarnedLeaveBalance", Type: "Calculated", Formula: "=(EarnedLeave-EarnedLeaveUsed)" },
-      { Name: "EmployeeID", Type: "SingleLine" },
-      { Name: "StartDate", Type: "SingleLine" },
-      { Name: "EndDate", Type: "SingleLine" },
-      { Name: "Manager", Type: "Person" },
+  // public async createBalanceCollectionList() {
+  //   var ListName = "BalanceCollection";
+  //   var batch = NewWeb.createBatch();
+  //   var Columns = [
+  //     { Name: "EmployeeEmail", Type: "SingleLine" },
+  //     { Name: "Year", Type: "SingleLine" },
+  //     { Name: "SickLeave", Type: "Number" },
+  //     { Name: "SickLeaveUsed", Type: "Number" },
+  //     { Name: "OtherLeave", Type: "Number" },
+  //     { Name: "EmployeeName", Type: "SingleLine" },
+  //     { Name: "CasualLeave", Type: "Number" },
+  //     { Name: "CasualLeaveUsed", Type: "Number" },
+  //     { Name: "OtherLeaveUsed", Type: "Number" },
+  //     { Name: "MaternityLeave", Type: "Number" },
+  //     { Name: "MaternityLeaveUsed", Type: "Number" },
+  //     { Name: "PaternityLeave", Type: "Number" },
+  //     { Name: "PaternityLeaveUsed", Type: "Number" },
+  //     { Name: "SickLeaveBalance", Type: "Calculated", Formula: "=(SickLeave-SickLeaveUsed)" },
+  //     { Name: "OtherLeaveBalance", Type: "Calculated", Formula: "=(OtherLeave-OtherLeaveUsed)" },
+  //     { Name: "PaternityLeaveBalance", Type: "Calculated", Formula: "=(PaternityLeave-PaternityLeaveUsed)" },
+  //     { Name: "MaternityLeaveBalance", Type: "Calculated", Formula: "=(MaternityLeave-MaternityLeaveUsed)" },
+  //     { Name: "CasualLeaveBalance", Type: "Calculated", Formula: "=(CasualLeave-CasualLeaveUsed)" },
+  //     { Name: "EarnedLeave", Type: "Number" },
+  //     { Name: "EarnedLeaveUsed", Type: "Number" },
+  //     { Name: "EarnedLeaveBalance", Type: "Calculated", Formula: "=(EarnedLeave-EarnedLeaveUsed)" },
+  //     { Name: "EmployeeID", Type: "SingleLine" },
+  //     { Name: "StartDate", Type: "SingleLine" },
+  //     { Name: "EndDate", Type: "SingleLine" },
+  //     { Name: "Manager", Type: "Person" },
 
 
 
-    ]
-    await NewWeb.lists.add(ListName).then(() => {
-      Columns.map(async (item: any) => {
-        if (item.Type == "SingleLine") {
-          NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addText(item.Name, 255, {
-            Group: "Custom Column",
-          }).then(() => {
-            NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
-            console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
-            this.updateProgress(progress);
-          })
-        }
-        else if (item.Type == "MultiLine") {
-          NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addMultilineText(item.Name, 255, true, false, false, false, {
-            Group: "Custom Column",
-            RichText: false,
-          }).then(() => {
-            NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
-            console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
-            this.updateProgress(progress);
-          })
-        }
-        else if (item.Type == "Number") {
-          NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
-            NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
-            console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
-            this.updateProgress(progress);
-          })
-        }
-        else if (item.Type == "Calculated") {
-          NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addCalculated(item.Name)
-            .then(async () => {
-              const progress = (1 * 100 / 74);
-              this.updateProgress(progress);
-              // NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
-              // NewWeb.lists.getByTitle(ListName).fields.getByTitle(item.Name).update({ Formula: item.Formula },);
-              await Promise.all([
-                NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name),
-                NewWeb.lists.getByTitle(ListName).fields.getByTitle(item.Name).update({ Formula: item.Formula })
-              ]);
-            }).then(() => {
-              console.log(`${item.Name} column created successfully`)
-            })
-        }
-        else if (item.Type == "Person") {
-          NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addUser(item.Name).then(() => {
-            NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
-            console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
-            this.updateProgress(progress);
-          })
-        }
-      })
-      // Execute the batch
-      batch.execute().then(function () {
-        console.log("Batch operations completed successfully for creating " + ListName + " list");
-      }).catch(function (error: any) {
-        console.log("Error in batch operations for creating " + ListName + " list: " + error);
-      });
-    })
-  }
+  //   ]
+  //   await NewWeb.lists.add(ListName).then(() => {
+  //     Columns.map(async (item: any) => {
+  //       if (item.Type == "SingleLine") {
+  //         NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addText(item.Name, 255, {
+  //           Group: "Custom Column",
+  //         }).then(() => {
+  //           NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
+  //           console.log(`${item.Name} column created successfully`)
+  //           const progress = (1 * 100 / 75);
+  //           this.updateProgress(progress);
+  //         })
+  //       }
+  //       else if (item.Type == "MultiLine") {
+  //         NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addMultilineText(item.Name, 255, true, false, false, false, {
+  //           Group: "Custom Column",
+  //           RichText: false,
+  //         }).then(() => {
+  //           NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
+  //           console.log(`${item.Name} column created successfully`)
+  //           const progress = (1 * 100 / 75);
+  //           this.updateProgress(progress);
+  //         })
+  //       }
+  //       else if (item.Type == "Number") {
+  //         NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addNumber(item.Name).then(() => {
+  //           NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
+  //           console.log(`${item.Name} column created successfully`)
+  //           const progress = (1 * 100 / 75);
+  //           this.updateProgress(progress);
+  //         })
+  //       }
+  //       else if (item.Type == "Calculated") {
+  //         NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addCalculated(item.Name)
+  //           .then(async () => {
+  //             const progress = (1 * 100 / 75);
+  //             this.updateProgress(progress);
+  //             // NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
+  //             // NewWeb.lists.getByTitle(ListName).fields.getByTitle(item.Name).update({ Formula: item.Formula },);
+  //             await Promise.all([
+  //               NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name),
+  //               NewWeb.lists.getByTitle(ListName).fields.getByTitle(item.Name).update({ Formula: item.Formula })
+  //             ]);
+  //           }).then(() => {
+  //             console.log(`${item.Name} column created successfully`)
+  //           })
+  //       }
+  //       else if (item.Type == "Person") {
+  //         NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addUser(item.Name).then(() => {
+  //           NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
+  //           console.log(`${item.Name} column created successfully`)
+  //           const progress = (1 * 100 / 75);
+  //           this.updateProgress(progress);
+  //         })
+  //       }
+  //     })
+  //     // Execute the batch
+  //     batch.execute().then(function () {
+  //       console.log("Batch operations completed successfully for creating " + ListName + " list");
+  //     }).catch(function (error: any) {
+  //       console.log("Error in batch operations for creating " + ListName + " list: " + error);
+  //     });
+  //   })
+  // }
   public async createHolidayCollectionList() {
     var ListName = "HolidayCollection";
     var batch = NewWeb.createBatch();
@@ -585,7 +588,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -593,7 +596,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addDateTime(item.Name).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -623,7 +626,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -634,7 +637,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           }).then(() => {
             NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
             console.log(`${item.Name} column created successfully`)
-            const progress = (1 * 100 / 74);
+            const progress = (1 * 100 / 75);
             this.updateProgress(progress);
           })
         }
@@ -664,7 +667,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
   public updateProgress(value: any) {
     overAllValue += value;
     console.log("Progress", overAllValue)
-    if (overAllValue >= progressEndValue) {
+    var RoundedValue = Math.ceil(overAllValue);
+    if (RoundedValue >= progressEndValue) {
       $(".progress-value").text(`100%`);
       Swal.fire('Configured successfully!', '', 'success').then(() => {
         location.reload();
@@ -673,6 +677,116 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     } else {
       $(".progress-value").text(`${Math.ceil(overAllValue)}%`);
       $(".circular-progress").css("background", `conic-gradient(#7d2ae8 ${Math.ceil(overAllValue) * 3.6}deg, #ededed 0deg)`);
+    }
+  }
+  public async createBalanceCollectionList() {
+    const ListName = "BalanceCollection";
+    const Columns = [
+      { Name: "EmployeeEmail", Type: "SingleLine" },
+      { Name: "Year", Type: "SingleLine" },
+      { Name: "SickLeave", Type: "Number" },
+      { Name: "SickLeaveUsed", Type: "Number" },
+      { Name: "OtherLeave", Type: "Number" },
+      { Name: "EmployeeName", Type: "SingleLine" },
+      { Name: "CasualLeave", Type: "Number" },
+      { Name: "CasualLeaveUsed", Type: "Number" },
+      { Name: "OtherLeaveUsed", Type: "Number" },
+      { Name: "MaternityLeave", Type: "Number" },
+      { Name: "MaternityLeaveUsed", Type: "Number" },
+      { Name: "PaternityLeave", Type: "Number" },
+      { Name: "PaternityLeaveUsed", Type: "Number" },
+      { Name: "SickLeaveBalance", Type: "Calculated", Formula: "=(SickLeave-SickLeaveUsed)" },
+      { Name: "OtherLeaveBalance", Type: "Calculated", Formula: "=(OtherLeave-OtherLeaveUsed)" },
+      { Name: "PaternityLeaveBalance", Type: "Calculated", Formula: "=(PaternityLeave-PaternityLeaveUsed)" },
+      { Name: "MaternityLeaveBalance", Type: "Calculated", Formula: "=(MaternityLeave-MaternityLeaveUsed)" },
+      { Name: "CasualLeaveBalance", Type: "Calculated", Formula: "=(CasualLeave-CasualLeaveUsed)" },
+      { Name: "EarnedLeave", Type: "Number" },
+      { Name: "EarnedLeaveUsed", Type: "Number" },
+      { Name: "EarnedLeaveBalance", Type: "Calculated", Formula: "=(EarnedLeave-EarnedLeaveUsed)" },
+      { Name: "EmployeeID", Type: "SingleLine" },
+      { Name: "StartDate", Type: "SingleLine" },
+      { Name: "EndDate", Type: "SingleLine" },
+      { Name: "Manager", Type: "Person" }
+    ];
+
+    try {
+      // Add the list
+      await NewWeb.lists.add(ListName);
+
+      // Add columns
+      for (const item of Columns) {
+        if (item.Type === "Calculated") {
+          await this.addCalculatedFieldWithRetry(ListName, item.Name, item.Formula);
+        } else {
+          await this.addField(ListName, item.Name, item.Type);
+        }
+      }
+
+      console.log("Batch operations completed successfully for creating " + ListName + " list");
+    } catch (error) {
+      console.error("Error creating BalanceCollections list:", error);
+    }
+  }
+  public async addField(listName: any, fieldName: any, fieldType: any) {
+    try {
+      let field;
+      if (fieldType === "SingleLine") {
+        field = await NewWeb.lists.getByTitle(listName).fields.addText(fieldName, 255, { Group: "Custom Column" });
+        const progress = (1 * 100 / 75);
+        this.updateProgress(progress);
+      } else if (fieldType === "MultiLine") {
+        field = await NewWeb.lists.getByTitle(listName).fields.addMultilineText(fieldName, 255, true, false, false, false, { Group: "Custom Column", RichText: false });
+        const progress = (1 * 100 / 75);
+        this.updateProgress(progress);
+      } else if (fieldType === "Number") {
+        field = await NewWeb.lists.getByTitle(listName).fields.addNumber(fieldName);
+        const progress = (1 * 100 / 75);
+        this.updateProgress(progress);
+      } else if (fieldType === "Person") {
+        field = await NewWeb.lists.getByTitle(listName).fields.addUser(fieldName);
+        const progress = (1 * 100 / 75);
+        this.updateProgress(progress);
+      }
+
+      if (field) {
+        await NewWeb.lists.getByTitle(listName).defaultView.fields.add(fieldName);
+        console.log(`${fieldName} column created successfully`);
+      }
+    } catch (error) {
+      console.error(`Error adding ${fieldType} field ${fieldName}:`, error);
+    }
+  }
+  public async addCalculatedFieldWithRetry(listName: any, fieldName: any, formula: any, retries = 0) {
+    try {
+      await this.addCalculatedField(listName, fieldName, formula);
+      console.log(`${fieldName} field added successfully`);
+    } catch (error) {
+      if (error.statusCode === 409 && retries < MAX_RETRIES) {
+        console.log(`Conflict detected, retrying (${retries + 1}/${MAX_RETRIES})...`);
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+        await this.addCalculatedFieldWithRetry(listName, fieldName, formula, retries + 1);
+      } else {
+        console.error(`Error adding calculated field ${fieldName}:`, error);
+      }
+    }
+  }
+  public async addCalculatedField(listName: any, fieldName: any, formula: any) {
+    try {
+      // Add the calculated field
+      await NewWeb.lists.getByTitle(listName).fields.addCalculated(fieldName, formula);
+      const progress = (1 * 100 / 75);
+      this.updateProgress(progress);
+      // Update additional properties
+      const field = NewWeb.lists.getByTitle(listName).fields.getByTitle(fieldName);
+      await field.update({
+        FieldTypeKind: FieldTypes.Calculated,
+        Group: "Custom Column"
+      });
+
+      console.log(`${fieldName} field added successfully`);
+    } catch (error) {
+      console.error("Error adding calculated field:", error);
+      throw error;
     }
   }
   public Checkuserexists() {
@@ -1078,7 +1192,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         if (willdelete) {
           NewWeb.lists.getByTitle("LeaveRequest").items.getById(itemidno).update({
             Status: "Cancelled"
-          }).then(() => {
+          }).then(async () => {
             NewWeb.lists.getByTitle("Leave Cancellation History").items.add({
               LeaveType: items.LeaveType,
               Day: items.Day,
@@ -1099,6 +1213,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
               CancelledBy: this.state.CurrentUserName
 
             })
+            this.EmailSend(items)
             this.Get_Blance_Count(totalDays, LeaveType, LeaveStatus)
 
           })
@@ -1314,6 +1429,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                   CancelledBy: this.state.CurrentUserName
 
                 })
+                this.EmailSend(items)
               })
               this.Get_Blance_Count(totalDays, LeaveType, LeaveStatus)
             }
@@ -1342,6 +1458,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
               CancelledBy: this.state.CurrentUserName
 
             })
+            this.EmailSend(items)
+
           })
           this.Get_Blance_Count(totalDays, LeaveType, LeaveStatus)
         }
@@ -1350,6 +1468,30 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     })
 
 
+  }
+  public async EmailSend(items: any) {
+    const emailProps: IEmailProperties = {
+      To: [items.EmployeeEmail, items.ApproverEmail], // Add the additional email address here
+      Subject: 'Leave Request is Cancelled by ' + this.state.CurrentUserName,
+      Body: `Leave Request Details<br/><br/>
+              Status                    : Cancelled<br/><br/>
+              Approver Name             : ${items.Approver}<br/><br/>
+              Leave Type                : ${items.LeaveType}<br/><br/>
+              Half Day / Full Day       : ${items.Day}<br/><br/>
+              Start Date                : ${items.StartDate}<br/><br/>
+              End Date                  : ${items.EndDate}<br/><br/>
+              Compensation Date         : ${items.CompOff != null ? items.CompOff : "-"}<br/><br/>
+              Reason                    : ${items.Reason}<br/><br/>
+              Manager Comments (if any) : ${items.ManagerComments}<br/><br/>`,
+      AdditionalHeaders: {
+        "content-type": "text/html"
+      }
+    };
+
+    await sp.utility.sendEmail(emailProps)
+      .then((result) => {
+        console.log(result)
+      });
   }
   public dateValidation(SelectedDate: any) {
     var FormStatus = true;
@@ -1393,6 +1535,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           CancelledBy: this.state.CurrentUserName
 
         })
+        var items = SpecificDate
+        this.EmailSend(items)
         var ReduceLeaveDays = TotalDaysLeaveApplied - LeaveDates.length
         this.Get_Blance_Count(ReduceLeaveDays, LeaveTypee, LeaveStatuss)
 
