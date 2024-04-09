@@ -18,6 +18,8 @@ import swal from "sweetalert";
 import * as moment from 'moment';
 import PermissionRequest from './PermissionRequest';
 import "../css/style.css"
+import "@pnp/sp/sputilities";
+import { IEmailProperties } from "@pnp/sp/sputilities";
 
 let ItemId;
 var CurrentUSERNAME = "";
@@ -68,7 +70,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
       `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
     );
 
-    
+
 
 
     sp.setup({
@@ -91,7 +93,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     NewWeb = Web("" + this.props.siteurl + "")
 
   }
- 
+
   public async isOwnerGroupMember() {
     var reacthandler = this;
     let userDetails = await this.spLoggedInUser(this.props.context);
@@ -294,7 +296,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     let userID = userDetails.Id;
     this.setState({ CurrentUserId: userID });
     await this.isOwnerGroupMember();
-   
+
     $(document).on('click', '#permission-dashboard', () => {
       this.setState({
         PermissionDashboard: true,
@@ -305,7 +307,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
   }
   public GetPermissionDetails() {
     var reactHandler = this;
-    
+
 
     var url = "" + this.props.siteurl + "/_api/web/lists/getbytitle('EmployeePermission')/items?$select=PermissionHour,TimeUpto,PermissionOn,timefromwhen,Requester,Reason,Status&$orderby=Created desc";
 
@@ -326,7 +328,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
           reactHandler.loadTable();
         }, 1000);
 
-       
+
       },
       error: function (jqXHR, textStatus, errorThrown) {
       }
@@ -353,7 +355,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     }
 
     return Usertype;
-   
+
   }
 
 
@@ -444,6 +446,29 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
           Status: "Cancelled",
           CancelledBy: this.state.CurrentUserName
         }).then(() => {
+          NewWeb.lists.getByTitle("EmployeePermission").items.select("*").filter(`ID eq ${itemidno}`).get()
+            .then(async (items: any) => {
+              const emailProps: IEmailProperties = {
+                To: [items[0].EmployeeEmail, items[0].ApproverEmail], // Add the additional email address here
+                Subject: 'Permission Request is Cancelled by ' + items[0].Approver + '',
+                Body: `Permission Request Details<br/><br/>
+                            Status                    : Cancelled<br/><br/>
+                            Approver Name             : ${items[0].Approver}<br/><br/>
+                            Permission On             : ${items[0].timefromwhen}<br/><br/>
+                            Permission Hours          : ${items[0].PermissionHour}<br/><br/>
+                            End Time                  : ${items[0].TimeUpto}<br/><br/>
+                            Reason                    : ${items[0].Reason}<br/><br/>
+                            Manager Comments (if any) : ${items[0].ManagerComments}<br/><br/>`,
+                AdditionalHeaders: {
+                  "content-type": "text/html"
+                }
+              };
+
+              await sp.utility.sendEmail(emailProps)
+                .then((result) => {
+                  console.log(result)
+                })
+            });
           swal({
             text: "Permission cancelled successfully!",
             icon: "success",
@@ -511,7 +536,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
               </>
             }
           </td>
-          
+
         </tr>
 
       );
