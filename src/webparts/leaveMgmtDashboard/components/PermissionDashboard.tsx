@@ -222,61 +222,8 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
       });
 
 
-  }
-  public async Checkusertype(UserType: string) {
-    var reactHandler = this;
-    if (UserType == "User") {
-
-      await NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "EmployeeEmail", "Reason", "Status").filter("EmployeeEmail eq '" + this.state.Empemail + "'").orderBy("Created", false).top(5000).get()
-
-        .then((items: any) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else {
-            this.loadTable();
-          }
-        });
-
-    } else {
-      await NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "PermissionHour", "TimeUpto", "PermissionOn", "timefromwhen", "Requester", "EmployeeEmail", "Reason", "Status").orderBy("Created", false).top(5000).get()
-
-        .then((items: any) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else {
-            this.loadTable();
-          }
-        });
-
-    }
-  }
-  public logout() {
-
-    localStorage.clear();
-    window.location.href = `https://login.windows.net/common/oauth2/logout`;
-
-  }
-  public _spLoggedInUserDetails() {
-    NewWeb.currentUser.get().then((user: any) => {
-      let userID = user.Id;
-      this.setState({ CurrentUserId: userID });
-    }, (errorResponse: any) => {
-    }
-    );
-  }
+  } 
+ 
   private async spLoggedInUser(ctx: any) {
     try {
       const web = Web(ctx.pageContext.site.absoluteUrl);
@@ -358,30 +305,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
 
   }
 
-
-  public Displaypermissionform() {
-
-    location.href = `https://tmxin.sharepoint.com/sites/ER/SitePages/Permission.aspx?env=WebView`;
-  }
-
-  public GetCurrentUserName() {
-    var reactHandler = this;
-    $.ajax({
-      url: `${this.props.siteurl}/_api/web/currentUser`,
-      method: "GET",
-      headers: {
-        Accept: "application/json; odata=verbose",
-      },
-      success: function (data) {
-        CurrentUSERNAME = data.d.Title;
-        reactHandler.setState({
-          CurrentUserName: CurrentUSERNAME
-
-        });
-      },
-      error: function (data) { },
-    });
-  }
   public loadTable() {
 
     ($('#LMSDashboard') as any).DataTable({

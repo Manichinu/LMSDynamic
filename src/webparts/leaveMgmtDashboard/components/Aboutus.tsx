@@ -13,15 +13,9 @@ import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/site-users/web";
-import * as $ from 'jquery';
-import swal from "sweetalert";
 import "../css/style.css"
 
-import * as moment from 'moment';
-import PermissionRequest from './PermissionRequest';
-let ItemId;
-var CurrentUSERNAME = "";
-var Usertype = "";
+
 let NewWeb: any;
 
 export interface AboutusState {
@@ -58,7 +52,7 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
             `https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css`
         );
 
-       
+
         SPComponentLoader.loadScript(
             `https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js`
         );
@@ -126,7 +120,7 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
                             <li className="li-bold"> About Leave Types</li>
                         </ul>
                         <div className="accordion" id="accordionExample">
-                            {LeaveTypes}                           
+                            {LeaveTypes}
                         </div>
                     </div>
                 </div>

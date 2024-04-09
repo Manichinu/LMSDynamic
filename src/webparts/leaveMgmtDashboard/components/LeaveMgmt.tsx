@@ -153,84 +153,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             autoclose: true
         });
     }
-
-    public logout() {
-
-        localStorage.clear();
-        window.location.href = `https://login.windows.net/common/oauth2/logout`;
-
-    }
-
-
-    public GetCausalleavebalance(email: any) {
-
-        var reactHandler = this;
-        let currentYear = new Date().getFullYear()
-        let nextYear = currentYear + 1
-        const url: any = new URL(window.location.href);
-        url.searchParams.get("ItemID");
-        ItemId = url.searchParams.get("ItemID");
-
-        NewWeb.lists.getByTitle("BalanceCollection").items.select("Id", "*", "CasualLeaveBalance", "EmployeeEmail").filter(`EmployeeEmail eq '${email}'`).get()
-
-            .then((items: any) => {
-
-                if (items.length != 0) {
-                    for (var i = 0; i < items.length; i++) {
-                        if (items[i].CasualLeaveBalance == 0) {
-                            swal({
-                                text: "You have availed the limit of the choosen leave",
-                                icon: "error",
-                            });
-                        }
-                        else {
-
-                            this.Addtolist();
-                        }
-
-                    }
-
-                }
-            });
-
-
-    }
-    public CheckValidationforExistingleave(email: any) {
-        datesCollection = [];
-        var reactHandler = this;
-
-        var url = `${this.props.siteurl}/_api/web/lists/getbytitle('LeaveRequest')/items?$select=StartDate,EndDate,EmployeeEmail&$filter('Author/EmployeeEmail eq '${email}'')`;
-
-        $.ajax({
-            url: url,
-            type: "GET",
-            async: false,
-            headers: { 'Accept': 'application/json; odata=verbose;' },
-            success: function (resultData) {
-
-
-                reactHandler.setState({
-                    Appliedleaveitems: resultData.d.results
-                });
-
-
-                for (var i = 1; i < resultData.d.results.length; i++) {
-                    var sdate = resultData.d.results[i].startdate;
-                    var edate = resultData.d.results[i].enddate;
-                    let date = [];
-
-                    for (var m = moment(sdate); m.isSameOrBefore(edate); m.add(1, 'days')) {
-                        datesCollection.push(m.format('YYYY-MM-DD'));
-                    }
-                    console.log(datesCollection);
-
-
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-            }
-        });
-    }
     public GetPreviousLeaveRequestDates(email: any) {
 
 
@@ -277,144 +199,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             }
         });
     }
-    public Checkalreadyinleave(email: any) {
-        var startdate = $("#txt-Startdate").val();
-        var enddate = $("#txt-Enddate").val();
-        let Status = true;
-
-
-        var filterquery = `EmployeeEmail eq '${email}' and '${startdate}' ge StartDate and '${enddate}' le EndDate`
-        debugger;
-
-
-        NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate").filter(filterquery).orderBy("Created", false).get().then((response: any): void => {
-            if (response.length != 0) {
-                console.log(response);
-                this.setState({
-                    IsAlreadyexist: true
-                });
-                Status = false;
-            } else {
-                var filterquery1 = `EmployeeEmail eq '${this.state.Email}' and  timefromwhen eq '${startdate}' and '${enddate}'`
-                NewWeb.lists.getByTitle("EmployeePermission").items.select("Id", "timefromwhen", "PermissionOn").filter(filterquery1).orderBy("Created", false).get().then((response: any): void => {
-                    if (response.length != 0) {
-                        this.setState({
-                            IsAlreadyexist: true
-                        });
-                        Status = false;
-                    }
-                    else {
-                        this.setState({
-
-                            IsAlreadyexist: false
-
-                        });
-                        Status = true;
-
-                    }
-                });
-
-            }
-
-        })
-
-        return Status;
-
-    }
-    public GetSickleavebalance(email: any) {
-
-        var reactHandler = this;
-        let currentYear = new Date().getFullYear()
-        let nextYear = currentYear + 1
-        const url: any = new URL(window.location.href);
-        url.searchParams.get("ItemID");
-        ItemId = url.searchParams.get("ItemID");
-
-        NewWeb.lists.getByTitle("BalanceCollection").items.select("Id", "*", "SickLeaveBalance", "EmployeeEmail").filter(`EmployeeEmail eq '${email}'`).get()
-
-            .then((items: any) => {
-
-                if (items.length != 0) {
-                    for (var i = 0; i < items.length; i++) {
-                        if (items[i].SickLeaveBalance == 0) {
-                            swal({
-                                text: "You have availed the limit of the choosen leave",
-                                icon: "error",
-                            });
-                        }
-                        else {
-                            this.Addtolist();
-                        }
-
-                    }
-
-                }
-            });
-
-
-    }
-    public GetEarnedleavebalance(email: any) {
-
-        var reactHandler = this;
-        let currentYear = new Date().getFullYear()
-        let nextYear = currentYear + 1
-        const url: any = new URL(window.location.href);
-        url.searchParams.get("ItemID");
-        ItemId = url.searchParams.get("ItemID");
-
-        NewWeb.lists.getByTitle("BalanceCollection").items.select("Id", "*", "EarnedLeaveBalance", "EmployeeEmail").filter(`EmployeeEmail eq '${email}'`).get()
-
-            .then((items: any) => {
-
-                if (items.length != 0) {
-                    for (var i = 0; i < items.length; i++) {
-                        if (items[i].EarnedLeaveBalance == 0) {
-                            swal({
-                                text: "You have availed the limit of the choosen leave",
-                                icon: "error",
-                            });
-                        }
-                        else {
-                            this.Addtolist();
-                        }
-                    }
-
-                }
-            });
-
-
-    }
-    public GetMaternityleavebalance(email: any) {
-
-        var reactHandler = this;
-        let currentYear = new Date().getFullYear()
-        let nextYear = currentYear + 1
-        const url: any = new URL(window.location.href);
-        url.searchParams.get("ItemID");
-        ItemId = url.searchParams.get("ItemID");
-
-        NewWeb.lists.getByTitle("BalanceCollection").items.select("Id", "*", "MaternityLeaveBalance", "EmployeeEmail").filter(`EmployeeEmail eq '${email}'`).get()
-
-            .then((items: any) => {
-
-                if (items.length != 0) {
-                    for (var i = 0; i < items.length; i++) {
-                        if (items[i].MaternityLeaveBalance == 0) {
-                            swal({
-                                text: "You have availed the limit of the choosen leave",
-                                icon: "error",
-                            });
-                        }
-                        else {
-                            this.Addtolist();
-                        }
-                    }
-
-                }
-            });
-
-
-    }
     public GetOtherleavebalance(email: string) {
 
         var reactHandler = this;
@@ -445,37 +229,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                 }
             });
 
-
-    }
-    public GetPaternityleavebalance(email: any) {
-
-        var reactHandler = this;
-        let currentYear = new Date().getFullYear()
-        let nextYear = currentYear + 1
-        const url: any = new URL(window.location.href);
-        url.searchParams.get("ItemID");
-        ItemId = url.searchParams.get("ItemID");
-
-        NewWeb.lists.getByTitle("BalanceCollection").items.select("Id", "*", "PaternityLeaveBalance", "EmployeeEmail").filter(`EmployeeEmail eq '${email}'`).get()
-
-            .then((items: any) => {
-
-                if (items.length != 0) {
-                    for (var i = 0; i < items.length; i++) {
-                        if (items[i].PaternityLeaveBalance == 0) {
-                            swal({
-                                text: "You have availed the limit of the choosen leave",
-                                icon: "error",
-                            });
-                        }
-                        else {
-                            this.Addtolist();
-                        }
-
-                    }
-
-                }
-            });
 
     }
     public GetCausalleaveExhaustbalance(email: string, Days: number) {
@@ -568,7 +321,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                 }
             });
     }
-
     public clearerror() {
         $("#divErrorText").empty();
         $("#divErrorText").hide();
@@ -646,32 +398,11 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                 }
             });
     }
-
-    public disableweekends() {
-        // disable weekends
-
-
-        const dWeekends = (current: { day: () => number; }) => {
-            return current.day() !== 0 && current.day() !== 6;
-        }
-    }
-    public disablepastdates() {
-        var date = new Date().toISOString().slice(0, 10);
-
-        //To restrict past date
-
-        $('#txt-Startdate').attr('min', date);
-        $('#txt-Enddate').attr('min', date);
-    }
-
     public componentDidMount() {
-        // this.LoadDatePicker();
         $(".opttime").prop('disabled', true);
         $("#ddl-full-Day").prop("checked", true);
         this.GenerateLeaveID();
-
         this.GetCurrentUserDetails();
-
 
         var now = new Date();
         var day = ("0" + now.getDate()).slice(-2);
@@ -754,9 +485,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         }, 800);
 
     }
-
-
-
     public GetCurrentUserDetails() {
 
         var reactHandler = this;
@@ -802,7 +530,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         });
 
     }
-
     public Get_CorrespondingApprover(EmployeeEmailid: any) {
         var currentYear = new Date().getFullYear()
         let nextYear = currentYear + 1
@@ -820,8 +547,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                 }
             })
     }
-
-
     public leavetypevalidation() {
         if (this.LeaveformValidation()) {
             $("#divErrorText").empty();
@@ -1205,7 +930,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
         }
     }
-
     public isInArray(PreviousLeaveRequestDates: any, value: string) {
         var DateStatus = false;
         PreviousLeaveRequestDates.map((item: any) => {
@@ -1216,7 +940,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         })
         return DateStatus
     }
-
     public getDaysBetweenDates(startDate: moment.Moment, endDate: moment.Moment, Status: any) {
         var now = startDate.clone();
         while (now.isSameOrBefore(endDate)) {
@@ -1227,62 +950,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         }
         return PreviousLeaveRequestDates;
     };
-    public TriggerAttachment() {
-        var reactHandler = this;
-        reactHandler.setState({
-            AttachmentCopies: []
-
-        });
-        NewWeb.lists.getByTitle("LeaveRequest").items.select("*").filter(`ID eq '${this.state.LeaveID}'`).expand("File").get().then((items: any) => {
-
-            if (items.length != 0) {
-
-                reactHandler.setState({
-                    AttachmentCopies: items
-                });
-            }
-        });
-    }
-
-    public uploadfilestodocuments() {
-        var fileArr = [];
-        var CurrentTime;
-
-        let myfile = (document.querySelector(".leave-file-upload") as HTMLInputElement).files.length;
-
-
-        for (var j = 0; j < myfile; j++) {
-            let fileVal = (document.querySelector(".leave-file-upload") as HTMLInputElement).files[j];
-            fileArr.push(fileVal);
-        }
-
-        for (var i = 0; i < fileArr.length; i++) {
-            CurrentTime = moment().format("DMYYYYHMS"); //1110202191045
-            var tempfilename = fileArr[i].name.split(".");
-            FileNameGenerated = tempfilename[0] + "-" + CurrentTime + "." + tempfilename[1] + "";
-            NewWeb.getFolderByServerRelativeUrl(this.props.context.pageContext.web.serverRelativeUrl + "/LeaverequestUploads").files.add(FileNameGenerated, fileArr[i], true).then((data: any) => {
-                data.file.getItem().then((item: any) => {
-                    AllFileAttachmentURL += "" + data.data.ServerRelativeUrl;// + "|";
-                    //get value
-
-
-
-                    LRUploadedFiles.push(data);
-
-                    item.update({
-                        RequestSessionMasterID: this.state.LeaveID,
-
-                    }).then((myupdate: any) => {
-                        console.log("File uploaded sucessfully : " + i + "");
-
-                    });
-
-                });
-            }).catch((error: any) => {
-                console.log(error);
-            });
-        }
-    }
     public async GenerateLeaveID() {
         var LeaveID;
         const list = NewWeb.lists
@@ -1308,83 +975,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             });
 
     }
-
-
-    public UploadFile() {
-        var reactHandler = this;
-
-        var input: any = document.getElementById("leave-file-upload");
-        var fileCount = input.files.length;
-        console.log(fileCount);
-        for (var i = 0; i < fileCount; i++) {
-            var fileName = input.files[i].name;
-            console.log(fileName);
-            var file = input.files[i];
-            var reader = new FileReader();
-
-            reader.onload = (function (e) {
-                return function (e) {
-                    fileInfos.push({
-                        "name": file.name,
-                        "content": e.target.result
-                    });
-                }
-            })(file);
-            reader.readAsArrayBuffer(file);
-        }
-
-        console.log("fileInfos:   " + fileInfos);
-
-        reactHandler.setState({
-            AttachmentCopies: fileInfos
-        });
-
-        console.log(this.state.AttachmentCopies);
-    }
-    public uploadfilestolist() {
-
-        var reactHandler = this;
-        var fileArr = [];
-
-
-        const myfile = (document.querySelector(".leave-file-upload") as HTMLInputElement).files.length;
-        for (var j = 0; j < myfile; j++) {
-            let fileVal = (document.querySelector(".leave-file-upload") as HTMLInputElement).files[j];
-            fileArr.push(fileVal);
-            console.log("fileVal:  " + fileVal);
-        }
-
-        for (var i = 0; i < fileArr.length; i++) {
-
-            var tempfilename = fileArr[i];
-
-            const reader = new FileReader();
-            reader.onload = (function (tempfilename) {
-
-
-                return function (e) {
-                    fileInfos.push({
-                        "name": tempfilename.name,
-                        "content": e.target.result
-                    });
-                }
-
-            })(tempfilename);
-
-            reader.readAsArrayBuffer(tempfilename);
-
-        }
-
-        console.log("fileInfos:   " + fileInfos);
-
-        reactHandler.setState({
-            AttachmentCopies: fileInfos
-        });
-
-        console.log(this.state.AttachmentCopies);
-
-    }
-
     public checkIsSameOrBefore(date1: moment.MomentInput, date2: moment.MomentInput) {
 
         return moment(date1).isBefore(date2);
@@ -1484,8 +1074,6 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         }
 
     }
-
-
     public async DeleteAttachment(e: number) {
 
 

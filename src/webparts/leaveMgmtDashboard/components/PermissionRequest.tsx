@@ -103,9 +103,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
 
   public componentDidMount() {
     this.GetCurrentUserDetails();
-    this._spLoggedInUserDetails();
-
-
   }
 
   public isInArray(PreviousLeaveRequestDates: any, value: string) {
@@ -183,7 +180,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
       headers: { 'Accept': 'application/json; odata=verbose;' },
       success: function (resultData) {
 
-        debugger;
 
         reactHandler.setState({
           Appliedleaveitems: resultData.d.results
@@ -204,12 +200,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     });
   }
 
-  public logout() {
-
-    localStorage.clear();
-    window.location.href = `https://login.windows.net/common/oauth2/logout`;
-
-  }
   public Calculatehours() {
     this.clearerror();
     var selectedhr: any = $('#ddl-Permissionhr').val();
@@ -232,15 +222,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     $("#txt-EndDate").val(calculatedtime);
 
   }
-  public _spLoggedInUserDetails() {
-    NewWeb.currentUser.get().then((user: any) => {
-      let userID = user.Id;
-      this.setState({ CurrentUserId: userID });
-    }, (errorResponse: any) => {
-
-    }
-    );
-  }
+  
   public Checkalreadyinleave() {
     let Status = true;
     var selectedtime = this.state.startDate;
@@ -336,7 +318,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
       headers: { 'Accept': 'application/json; odata=verbose;' },
 
       success: function (resultData) {
-
+        console.log(resultData)
         var email = resultData.d.Email;
 
         var Name = resultData.d.DisplayName;
@@ -351,7 +333,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
           CurrentUserDesignation: Designation,
 
           Email: email,
-
+          CurrentUserId: resultData.d.Id,
           CurrentUserProfilePic: `${reacthandler.props.siteurl}/_layouts/15/userphoto.aspx?size=l&username=${email}`
 
         });

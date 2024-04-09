@@ -149,7 +149,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
   public logout() {
     window.location.href = `https://login.windows.net/common/oauth2/logout`;
   }
-
   public GetCurrentUserDetails() {
     var reacthandler = this;
     $.ajax({
@@ -182,7 +181,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     });
 
   }
-
   public async componentDidMount() {
     this.GetCurrentUserDetails();
     this.checkConfiguredOrNot();
@@ -830,28 +828,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       console.error("Error adding calculated field:", error);
       throw error;
     }
-  }
-  public Checkuserexists() {
-    if (this.checkUserInGroup("LMS Admin")) {
-
-      // setTimeout(() => {
-
-      this.setState({ IsAdmin: true });
-      //this.GetAdminlistitems();
-
-      //    }, 1000);
-
-
-    } else {
-
-      // setTimeout(() => {
-      // console.log("Not Exists");
-      this.setState({ IsAdmin: false });
-      // this.GetUserlistitems();
-
-      // }, 1000);
-    }
-  }
+  }  
   public async addCurrentUserDetails() {
     await NewWeb.lists.getByTitle("BalanceCollection").items.add({
       EmployeeEmail: this.state.Empemail,
@@ -870,14 +847,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       EarnedLeaveUsed: 0,
 
     })
-  }
-
-  public checkUserInGroup(strGroup: string) {
-
-    let InGroup: boolean = false;
-    const title = (_SiteGroups as any)['Title'];
-    return InGroup;
-
   }
   /** Check if the current user is in Owners group **/
   public async isOwnerGroupMember() {
@@ -922,31 +891,11 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
     });
 
-  }
-  public async Checkuserforlogin() {
-    let userDetails = await this.spLoggedInUser(this.props.context);
-    console.log(userDetails.Id);
-    let currusername = userDetails.LoginName;
-    let groups = await NewWeb.currentUser.groups();
-
-    for (var i = 0; i < groups.length; i++) {
-      if (groups[i].Title == "LMS Admin") {
-
-
-        this.setState({ IsAdmin: true });
-        await this.GetAdminlistitems();
-
-      } else {
-        await this.GetUserlistitems();
-      }
-
-    }
-  }
+  }  
   public GetUserlistitems() {
     var reactHandler = this;
     NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate", "CompOff").filter(`Author/Id eq ${this.props.userId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
 
-      // await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate").filter(`Author/Id eq ${this.props.userId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
 
       .then((items: any) => {
         if (items.length != 0) {
@@ -983,104 +932,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       });
   }
   /*Get Current Logged In User*/
-
-  public async GetListitems() {
-    var reacthandler = this;
-    var UserType = "";
-    let groups = await NewWeb.currentUser.groups();
-    for (var i = 0; i < groups.length; i++) {
-      if (groups[i].Title == 'LMS Admin') {
-
-        this.setState({ IsAdmin: true });
-        UserType = "Admin";
-        Usertype = UserType;
-
-
-        return false;
-      }
-      else {
-        UserType = "User";
-        Usertype = UserType;
-
-
-      }
-    }
-    console.log(UserType);
-
-
-  }
-
-  public async GetListitemsnew() {
-    var reactHandler = this;
-    var UserType = "";
-    let groups = await NewWeb.currentUser.groups();
-    for (var i = 0; i < groups.length; i++) {
-      if (groups[i].Title == 'LMS Admin') {
-        UserType = "Admin";
-        console.log(UserType);
-        Usertype = UserType;
-
-        return Usertype;
-
-      } else {
-
-        UserType = "User";
-        Usertype = "User"
-
-      }
-    }
-
-    return Usertype;
-
-
-
-  }
-
-  public async Checkusertype(UserType: string) {
-    var reactHandler = this;
-    if (UserType == "User") {
-      console.log("User :" + UserType);
-      let userDetails = await this.spLoggedInUser(this.props.context);
-      console.log(userDetails.Id);
-      let userID = userDetails.Id;
-
-      await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Day", "Reason", "Days", "Requester", "EmployeeEmail", "LeaveType", "Status", "AppliedDate", "CompOff").filter(`Author/Id eq ${this.props.userId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-        .then((items: any) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else {
-            this.loadTable();
-          }
-        });
-
-    } else {
-      console.log("Admin :" + UserType);
-      await NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate", "CompOff").expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
-
-        .then((items: any) => {
-          if (items.length != 0) {
-
-            reactHandler.setState({
-
-              DatatableItems: items
-            });
-            this.loadTable();
-
-          }
-          else {
-            this.loadTable();
-          }
-        });
-
-    }
-  }
-
   private async spLoggedInUser(ctx: any) {
     try {
       const web = Web(ctx.pageContext.site.absoluteUrl);
@@ -1089,48 +940,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       console.log("Error in spLoggedInUserDetails : " + error);
     }
   }
-
-
-  public async GetGroupmembers() {
-    var userGroups = []
-
-    // Gets the associated visitors group of a web
-    const visitorGroup = await sp.web.associatedVisitorGroup();
-    console.log(visitorGroup);
-    // Gets the associated members group of a web
-    const memberGroup = await sp.web.associatedMemberGroup();
-    // get all groups the current user belongs to
-    return sp.web.currentUser.groups().then(function (groups) {
-      for (var i = 0; i < groups.length; i++) {
-        userGroups.push(groups[i].Title);
-      }
-    });
-  }
-
-
-
-
-
-
-  public GetCurrentUserName() {
-    var reactHandler = this;
-    $.ajax({
-      url: `${this.props.siteurl}/_api/web/currentUser`,
-      method: "GET",
-      headers: {
-        Accept: "application/json; odata=verbose",
-      },
-      success: function (data) {
-        CurrentUSERNAME = data.d.Title;
-        reactHandler.setState({
-          CurrentUserName: CurrentUSERNAME
-
-        });
-      },
-      error: function (data) { },
-    });
-  }
-
   public loadTable() {
 
 
@@ -1172,7 +981,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     });
 
   }
-
   public GetleaveBalance(email: any) {
     CausalArr = [];
     CausalArrtotal = [];
@@ -1204,38 +1012,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
 
 
-  }
-  public GetLeaveDetails() {
-    var reactHandler = this;
-    var url = `${this.props.siteurl}/_api/web/lists/getbytitle('LeaveRequest')/items?$select=StartDate,EndDate,LeaveType,Day,Reason,Requester,AppliedDate,Status&$orderby=Created desc`;
-    $.ajax({
-      url: url,
-      type: "GET",
-      async: false,
-      headers: { 'Accept': 'application/json; odata=verbose;' },
-      success: function (resultData) {
-        console.log(resultData);
-        reactHandler.setState({
-
-          DatatableItems: resultData.d.results
-        });
-
-        setTimeout(() => {
-          reactHandler.loadTable();
-        }, 1000);
-
-
-      },
-      error: function (jqXHR, textStatus, errorThrown) {
-      }
-    });
-  }
-
-  public Displayleaveform() {
-
-    location.href = `${this.props.siteurl}/SitePages/LeaveApplication.aspx?env=WebView`;
-  }
-
+  } 
   public Cancel_Request_(itemidno: number, totalDays: number, StartDate: moment.MomentInput, EndDate: moment.MomentInput, LeaveType: any, LeaveStatus: any, items: any) {
     var startdate = moment(StartDate).format('DD-MM-YYYY')
     var endtdate = moment(EndDate).format('DD-MM-YYYY')
@@ -1292,12 +1069,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     // }
 
   }
-
-
-
-
-
-
   public Get_Blance_Count(totalDays: any, leavetype: any, LeaveStatus: any) {
 
 
@@ -1322,9 +1093,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       })
 
   }
-
-
-
   public Update_Blance_Count(result: any[], totaldaysapplied_leave: number, leavetype: string, LeaveStatus: any) {
 
     if (LeaveStatus != "Pending") {
@@ -1610,7 +1378,6 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       });
     }
   }
-
   public showLeaveMgmtDashboard() {
     this.setState({
       LeaveMgmtDashboard: true,

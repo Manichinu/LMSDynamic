@@ -95,36 +95,23 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
     });
 
   }
-  public logout() {
 
-    window.location.href = `https://login.windows.net/common/oauth2/logout`;
-
-  }
   public async componentDidMount() {
     const url: any = new URL(window.location.href);
     url.searchParams.get("ItemID");
     ItemId = url.searchParams.get("ItemID");
 
     this.GetHolidaylist();
-    this._spLoggedInUserDetails();
     this.GetCurrentUserDetails();
 
     await this.CheckManagerPermissionPrivillages();
 
   }
-  public _spLoggedInUserDetails() {
-    NewWeb.currentUser.get().then((user: any) => {
-      let userID = user.Id;
-      this.setState({ CurrentUserId: userID });
-    }, (errorResponse: any) => {
-      //console.log(errorResponse);
-    }
-    );
-  }
+
   public GetHolidaylist() {
     var reactHandler = this;
     var url = `${this.props.siteurl}/_api/web/lists/getbytitle('HolidayCollection')/items?$select=StartDate,HolidayName&$orderby=StartDate asc`;
-   
+
 
 
     $.ajax({
@@ -146,7 +133,7 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
 
   public async CheckManagerPermissionPrivillages() {
 
- 
+
     let groups = await NewWeb.currentUser.groups();
     for (var i = 0; i < groups.length; i++) {
       if (groups[i].Title == 'LMS Admin') {
@@ -160,7 +147,7 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
 
 
       }
-     
+
 
     }
   }
@@ -183,7 +170,7 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
     });
 
     return (
-      <div>        
+      <div>
         <div className="container">
           <div className="dashboard-wrap">
             {this.state.IsAdmin == true &&

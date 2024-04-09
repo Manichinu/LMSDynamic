@@ -16,16 +16,12 @@ import * as $ from 'jquery';
 import swal from "sweetalert";
 
 import * as moment from 'moment';
-import PermissionRequest from './PermissionRequest';
 import "../css/style.css"
 import Swal from "sweetalert2";
 import "@pnp/sp/sputilities";
 import { IEmailProperties } from "@pnp/sp/sputilities";
 
 let ItemId;
-var CurrentUSERNAME = "";
-var Usertype = "";
-// const NewWeb = Web('https://tmxin.sharepoint.com/sites/ER/');
 let NewWeb: any;
 
 export interface PermissionDashboardState {
@@ -193,12 +189,7 @@ export default class PermissionApprovalDashboard extends React.Component<ILeaveM
         let userID = userDetails.Id;
         this.setState({ CurrentUserId: userID });
         await this.isOwnerGroupMember();
-        //await this.GetListitems();
-        // console.log("User Type:"+Usertype);
-        // this.Checkusertype(Usertype);
-
-
-        //  this.loadTable();
+        
         $(document).on('click', '#permission-dashboard', () => {
             this.setState({
                 PermissionDashboard: true,
