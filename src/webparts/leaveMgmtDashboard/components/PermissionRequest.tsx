@@ -16,7 +16,10 @@ import { IAttachmentFileInfo, IItemAddResult, Web } from "@pnp/sp/presets/all";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/attachments";
-import "../css/style.css"
+import "../css/style.css";
+import { sp } from "@pnp/sp";
+import "@pnp/sp/sputilities";
+import { IEmailProperties } from "@pnp/sp/sputilities";
 
 let datesCollection: string[] = [];
 var PreviousLeaveRequestDates: any[] = [];
@@ -408,6 +411,29 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
           .then((item: any) => {
 
             let ID = item.data.Id;
+            NewWeb.lists.getByTitle("EmployeePermission").items.select("*").filter(`ID eq ${ID}`).get()
+              .then(async (items: any) => {
+                const emailProps: IEmailProperties = {
+                  To: ['' + items[0].ApproverEmail + ''],
+                  Subject: 'Permission Request is Raised by ' + this.state.CurrentUserName + '',
+                  Body: `Permission Request Details<br/><br/>
+                            Status                    : Pending<br/><br/>
+                            Approver Name             : ${items[0].Approver}<br/><br/>
+                            Permission On             : ${items[0].timefromwhen}<br/><br/>
+                            Permission Hours          : ${items[0].PermissionHour}<br/><br/>
+                            End Time                  : ${items[0].TimeUpto}<br/><br/>
+                            Reason                    : ${items[0].Reason}<br/><br/>
+                            <p>Please <a href='${this.props.siteurl}/SitePages/LeaveManagement.aspx?tab=permission'>click here</a> to view the request</p>`,
+                  AdditionalHeaders: {
+                    "content-type": "text/html"
+                  }
+                };
+
+                await sp.utility.sendEmail(emailProps)
+                  .then((result: any) => {
+                    console.log(result)
+                  })
+              });
 
             swal({
               text: "Permission applied successfully!",
@@ -438,14 +464,14 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
   public Get_CorrespondingApprover(EmployeeEmailid: any) {
     var currentYear = new Date().getFullYear()
     let nextYear = currentYear + 1
-    NewWeb.lists.getByTitle("BalanceCollection").items.select("ID", "*", "CasualLeaveBalance", "EmployeeEmail", "Manager/Title", "Manager/EMail").expand("Manager").filter(`EmployeeEmail eq '${EmployeeEmailid}'`).get()
+    NewWeb.lists.getByTitle("Approver Configuration").items.select("ID", "*", "Approver/Title", "Approver/EMail").expand("Approver").get()
       .then((result: any) => {
         if (result.length != 0) {
           console.log(result);
 
           Approver_Manager_Details.push({
-            ApproverName: result[0].Manager.Title,
-            ApproverEmail: result[0].Manager.EMail
+            ApproverName: result[0].Approver.Title,
+            ApproverEmail: result[0].Approver.EMail
           })
 
           console.log(Approver_Manager_Details)

@@ -191,20 +191,21 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
     url.searchParams.get("ItemID");
     ItemId = url.searchParams.get("ItemID");
 
+
     let userDetails = await this.spLoggedInUser(this.props.context);
 
     let userID = userDetails.Id;
     this.setState({ CurrentUserId: userID });
 
     await this.isOwnerGroupMember();
-    this.GetBalanceCollectionItems()
+    this.GetApproverConfigurationItems()
 
   }
-  public GetBalanceCollectionItems() {
-    NewWeb.lists.getByTitle("BalanceCollection").items.select("*").getAll()
+  public async GetApproverConfigurationItems() {
+    await NewWeb.lists.getByTitle("Approver Configuration").items.select("*").getAll()
       .then((items: any) => {
         items.map((item: any) => {
-          if (this.state.CurrentUserId == item.ManagerId) {
+          if (this.state.CurrentUserId == item.ApproverId) {
             this.setState({
               IsCurrentUserisManager: true
             })
@@ -213,6 +214,17 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         })
         console.log("ManagerItems", items)
       });
+    const searchParams = new URLSearchParams(window.location.search);
+    const hasTab = searchParams.has("tab");
+    if (hasTab) {
+      var tabName = searchParams.get("tab");
+      if (tabName == "permission") {
+        this.showPermissionApprovalsDashboard()
+      } else if (tabName == "leave") {
+        this.showApprovalsDashboard()
+      }
+
+    }
   }
   public async checkConfiguredOrNot() {
     NewWeb.lists.getByTitle("Configure Master").items.get().then((items: any) => {
@@ -242,7 +254,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       await this.createBalanceCollectionList();
       await this.createHolidayCollectionList();
       await this.createLeaveTypeCollectionList();
-
+      await this.addCurrentUserDetails();
+      await this.createApproverConfigurationList();
     } catch (error) {
       console.error("Error configuring lists:", error);
     }
@@ -664,6 +677,35 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       console.error("Error creating list:", error);
     }
   }
+  public async createApproverConfigurationList() {
+    var ListName = "Approver Configuration";
+    var batch = NewWeb.createBatch();
+    var Columns = [
+      { Name: "Approver", Type: "Person" },
+
+    ]
+    await NewWeb.lists.add(ListName).then(() => {
+      Columns.map(async (item: any) => {
+        if (item.Type == "Person") {
+          NewWeb.lists.getByTitle(ListName).fields.inBatch(batch).addUser(item.Name).then(() => {
+            NewWeb.lists.getByTitle(ListName).defaultView.fields.add(item.Name)
+            console.log(`${item.Name} column created successfully`)
+            const progress = (1 * 100 / 75);
+            this.updateProgress(progress);
+          })
+        }
+      })
+      // Execute the batch
+      batch.execute().then(function () {
+        console.log("Batch operations completed successfully for creating " + ListName + " list");
+      }).catch(function (error: any) {
+        console.log("Error in batch operations for creating " + ListName + " list: " + error);
+      });
+    })
+    NewWeb.lists.getByTitle(ListName).items.add({
+      ApproverId: this.state.CurrentUserId
+    })
+  }
   public updateProgress(value: any) {
     overAllValue += value;
     console.log("Progress", overAllValue)
@@ -706,7 +748,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       { Name: "EmployeeID", Type: "SingleLine" },
       { Name: "StartDate", Type: "SingleLine" },
       { Name: "EndDate", Type: "SingleLine" },
-      { Name: "Manager", Type: "Person" }
+      // { Name: "Manager", Type: "Person" }
     ];
 
     try {
@@ -809,6 +851,25 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
       // }, 1000);
     }
+  }
+  public async addCurrentUserDetails() {
+    await NewWeb.lists.getByTitle("BalanceCollection").items.add({
+      EmployeeEmail: this.state.Empemail,
+      SickLeave: 12,
+      SickLeaveUsed: 0,
+      OtherLeave: 100,
+      OtherLeaveUsed: 0,
+      EmployeeName: this.state.CurrentUserName,
+      CasualLeave: 12,
+      CasualLeaveUsed: 0,
+      MaternityLeave: 130,
+      MaternityLeaveUsed: 0,
+      PaternityLeave: 40,
+      PaternityLeaveUsed: 0,
+      EarnedLeave: 12,
+      EarnedLeaveUsed: 0,
+
+    })
   }
 
   public checkUserInGroup(strGroup: string) {
@@ -1803,7 +1864,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                 <ul>
                   <li className="person-details">
                     <span id="CurrentUser-displayname">{this.state.CurrentUserName}</span>
-                    <a href="#" onClick={this.logout}><img src={require("../img/logout.png")} /></a>
+                    <a href={`${this.props.siteurl}/_layouts/SignOut.aspx`} onClick={this.logout}><img src={require("../img/logout.png")} /></a>
                   </li>
                 </ul>
               </div>

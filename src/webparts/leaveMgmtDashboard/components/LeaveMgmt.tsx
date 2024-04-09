@@ -7,7 +7,7 @@ import * as $ from "jquery";
 import "bootstrap-datepicker";
 import ReactFileReader from 'react-file-reader';
 
-
+import { sp } from "@pnp/sp";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/attachments";
@@ -21,7 +21,8 @@ import { _Items } from '@pnp/sp/items/types';
 import DatePicker, { DateObject } from "react-multi-date-picker";
 import DatePanel from "react-multi-date-picker/plugins/date_panel";
 import "../css/style.css"
-
+import "@pnp/sp/sputilities";
+import { IEmailProperties } from "@pnp/sp/sputilities";
 
 var AttachmentURL = "";
 var FileNameGenerated: string;
@@ -49,7 +50,7 @@ export interface ILeaveMgmtState {
     Time: any;
     Startdate: any;
     Enddate: any;
-    Reason: any;    
+    Reason: any;
     uploadfiles: any[];
     CurrentUserName: string;
     CurrentUserDesignation: string;
@@ -99,7 +100,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         );
 
 
-       
+
 
 
         this.state = {
@@ -206,7 +207,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             async: false,
             headers: { 'Accept': 'application/json; odata=verbose;' },
             success: function (resultData) {
-             
+
 
                 reactHandler.setState({
                     Appliedleaveitems: resultData.d.results
@@ -232,7 +233,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
     }
     public GetPreviousLeaveRequestDates(email: any) {
 
-       
+
         var filterquery = `EmployeeEmail eq '${email}' and Status ne 'Rejected'`
         NewWeb.lists.getByTitle("LeaveRequest").items.select("StartDate", "EndDate", "EmployeeEmail", "Status").filter(filterquery).orderBy("Created", false).get().then((response: any): void => {
             if (response.length != 0) {
@@ -805,14 +806,14 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
     public Get_CorrespondingApprover(EmployeeEmailid: any) {
         var currentYear = new Date().getFullYear()
         let nextYear = currentYear + 1
-        NewWeb.lists.getByTitle("BalanceCollection").items.select("ID", "*", "CasualLeaveBalance", "EmployeeEmail", "Manager/Title", "Manager/EMail").expand("Manager").filter(`EmployeeEmail eq '${EmployeeEmailid}'`).get()
+        NewWeb.lists.getByTitle("Approver Configuration").items.select("ID", "*", "Approver/Title", "Approver/EMail").expand("Approver").get()
             .then((result: any) => {
                 if (result.length != 0) {
                     console.log(result);
 
                     Approver_Manager_Details.push({
-                        ApproverName: result[0].Manager.Title,
-                        ApproverEmail: result[0].Manager.EMail
+                        ApproverName: result[0].Approver.Title,
+                        ApproverEmail: result[0].Approver.EMail
                     })
 
                     console.log(Approver_Manager_Details)
@@ -969,12 +970,13 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                         .then((item: any) => {
 
                                             let ID = item.data.Id;
+                                            this.sendEmailToApprover(ID)
                                             NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {
                                                 swal({
                                                     text: "Leave applied successfully!",
                                                     icon: "success",
                                                 }).then(() => {
-                                                  
+
                                                     location.reload()
                                                 });
                                             });
@@ -1073,12 +1075,13 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                             .then((item: any) => {
 
                                                 let ID = item.data.Id;
+                                                this.sendEmailToApprover(ID)
                                                 NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {
                                                     swal({
                                                         text: "Leave applied successfully!",
                                                         icon: "success",
                                                     }).then(() => {
-                                                       
+
                                                         location.reload()
                                                     });
                                                 });
@@ -1157,12 +1160,13 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                             .then((item: any) => {
 
                                                 let ID = item.data.Id;
+                                                this.sendEmailToApprover(ID)
                                                 NewWeb.lists.getByTitle("LeaveRequest").items.getById(ID).attachmentFiles.addMultiple(this.state.AttachmentCopies).then(() => {
                                                     swal({
                                                         text: "Leave applied successfully!",
                                                         icon: "success",
                                                     }).then(() => {
-                                                        
+
                                                         location.reload();
                                                     });
                                                 });
@@ -1597,6 +1601,32 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
             $("#txt-Enddate").prop("disabled", false);
         }
     }
+    public async sendEmailToApprover(id: any) {
+        NewWeb.lists.getByTitle("LeaveRequest").items.select("*").filter(`ID eq ${id}`).get().then(async (items: any) => {
+            const emailProps: IEmailProperties = {
+                To: [items[0].ApproverEmail], // Add the additional email address here
+                Subject: 'Leave Request is Raised by ' + this.state.CurrentUserName,
+                Body: `Leave Request Details<br/><br/>
+                  Status                    : Pending<br/><br/>
+                  Approver Name             : ${items[0].Approver}<br/><br/>
+                  Leave Type                : ${items[0].LeaveType}<br/><br/>
+                  Half Day / Full Day       : ${items[0].Day}<br/><br/>
+                  Start Date                : ${items[0].StartDate}<br/><br/>
+                  End Date                  : ${items[0].EndDate}<br/><br/>
+                  Compensation Date         : ${items[0].CompOff != null ? items[0].CompOff : "-"}<br/><br/>
+                  Reason                    : ${items[0].Reason}<br/><br/>
+                  <p>Please <a href='${this.props.siteurl}/SitePages/LeaveManagement.aspx?tab=leave'>click here</a> to view the request</p>`,
+                AdditionalHeaders: {
+                    "content-type": "text/html"
+                }
+            };
+
+            await sp.utility.sendEmail(emailProps)
+                .then((result) => {
+                    console.log(result)
+                });
+        })
+    }
 
     public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
         console.log(this.state.AttachmentCopies);
@@ -1776,7 +1806,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
                                         </div>
                                         <div id="leaveBindCopy">
                                             {LeaveRequestAttachments}
-                                           
+
                                         </div>
 
                                     </div>
