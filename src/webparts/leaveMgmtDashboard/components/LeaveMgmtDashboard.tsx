@@ -84,6 +84,7 @@ export interface LeaveMgmtDashboardState {
   Approvals: boolean;
   PermissionApprovalDashboard: boolean;
   IsCurrentUserisManager: boolean;
+  leaveType: string;
 }
 
 export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashboardProps, LeaveMgmtDashboardState> {
@@ -140,7 +141,8 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       Configure: false,
       Approvals: false,
       PermissionApprovalDashboard: false,
-      IsCurrentUserisManager: false
+      IsCurrentUserisManager: false,
+      leaveType: ""
     };
     NewWeb = Web("" + this.props.siteurl + "")
 
@@ -828,7 +830,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       console.error("Error adding calculated field:", error);
       throw error;
     }
-  }  
+  }
   public async addCurrentUserDetails() {
     await NewWeb.lists.getByTitle("BalanceCollection").items.add({
       EmployeeEmail: this.state.Empemail,
@@ -891,7 +893,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
     });
 
-  }  
+  }
   public GetUserlistitems() {
     var reactHandler = this;
     NewWeb.lists.getByTitle("LeaveRequest").items.select("Id", "*", "StartDate", "EndDate", "Reason", "Days", "Requester", "EmployeeEmail", "Day", "LeaveType", "Status", "AppliedDate", "CompOff").filter(`Author/Id eq ${this.props.userId}`).expand('AttachmentFiles').orderBy("Created", false).top(5000).get()
@@ -1012,7 +1014,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
 
 
-  } 
+  }
   public Cancel_Request_(itemidno: number, totalDays: number, StartDate: moment.MomentInput, EndDate: moment.MomentInput, LeaveType: any, LeaveStatus: any, items: any) {
     var startdate = moment(StartDate).format('DD-MM-YYYY')
     var endtdate = moment(EndDate).format('DD-MM-YYYY')
@@ -1678,7 +1680,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                     <div className="three-blocks-wrap">
 
                       <div className="row">
-                        <div className="col-md-4"><a href="">
+                        <div className="col-md-4 leavecount-box" onClick={() => { this.setState({ leaveType: "TMX001" }); this.showLeaveMgmt() }}>
                           <div className="three-blocks">
                             <div className="three-blocks-img">
                               <img src={require("../img/approved.png")} alt="image" />
@@ -1690,9 +1692,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                               {EarnedLeaveBodycontent}
                             </div>
 
-                          </div> </a>
+                          </div>
                         </div>
-                        <div className="col-md-4"><a href="">
+                        <div className="col-md-4 leavecount-box" onClick={() => { this.setState({ leaveType: "TMX002" }); this.showLeaveMgmt() }}>
                           <div className="three-blocks">
                             <div className="three-blocks-img">
                               <img src={require("../img/pending.png")} alt="image" />
@@ -1705,9 +1707,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
 
                             </div>
 
-                          </div></a>
+                          </div>
                         </div>
-                        <div className="col-md-4"><a href="">
+                        <div className="col-md-4 leavecount-box" onClick={() => { this.setState({ leaveType: "TMX003" }); this.showLeaveMgmt() }}>
                           <div className="three-blocks">
                             <div className="three-blocks-img">
                               <img src={require("../img/sickleave.svg")} alt="image" />
@@ -1717,9 +1719,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                               <p> Sick Leave </p>
                               {SickLeaveBodycontent}
                             </div>
-                          </div></a>
+                          </div>
                         </div>
-                        <div className="col-md-4"><a href="">
+                        <div className="col-md-4 leavecount-box" onClick={() => { this.setState({ leaveType: "TMX004" }); this.showLeaveMgmt() }}>
                           <div className="three-blocks">
                             <div className="three-blocks-img">
                               <img src={require("../img/maternity.svg")} alt="image" />
@@ -1729,9 +1731,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                               <p> Maternity Leave </p>
                               {MaternityLeaveBodycontent}
                             </div>
-                          </div></a>
+                          </div>
                         </div>
-                        <div className="col-md-4"><a href="">
+                        <div className="col-md-4 leavecount-box" onClick={() => { this.setState({ leaveType: "TMX005" }); this.showLeaveMgmt() }}>
                           <div className="three-blocks">
                             <div className="three-blocks-img">
                               <img src={require("../img/paternityleave.svg")} alt="image" />
@@ -1741,9 +1743,9 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                               <p> Paternity Leave </p>
                               {PaternityLeaveBodycontent}
                             </div>
-                          </div></a>
+                          </div>
                         </div>
-                        <div className="col-md-4"><a href="">
+                        <div className="col-md-4 leavecount-box" onClick={() => { this.setState({ leaveType: "TMX006" }); this.showLeaveMgmt() }}>
                           <div className="three-blocks">
                             <div className="three-blocks-img">
                               <img src={require("../img/otherleave.svg")} alt="image" />
@@ -1753,7 +1755,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                               <p> Unpaid Leave </p>
                               {OtherLeaveBodycontent}
                             </div>
-                          </div></a>
+                          </div>
                         </div>
                       </div>
 
@@ -1822,30 +1824,30 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
           </div>
         }
         {this.state.Holiday == true &&
-          <Holiday description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <Holiday description={''} leaveType={this.state.leaveType} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
         }
         {this.state.LeaveMgmt == true &&
-          <LeaveMgmt description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <LeaveMgmt description={''} leaveType={this.state.leaveType} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
         {this.state.PermissionDashboard == true &&
-          <PermissionDashboard description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <PermissionDashboard description={''} leaveType={this.state.leaveType} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
         {this.state.PermissionRequest == true &&
-          <PermissionRequest description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <PermissionRequest description={''} leaveType={this.state.leaveType} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
         {this.state.AboutUs == true &&
-          <Aboutus description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <Aboutus description={''} leaveType={this.state.leaveType} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
         {this.state.Approvals == true &&
-          <ApprovalDashboard description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <ApprovalDashboard description={''} leaveType={this.state.leaveType} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
         {this.state.PermissionApprovalDashboard == true &&
-          <PermissionApprovalDashboard description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <PermissionApprovalDashboard description={''} leaveType={this.state.leaveType} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
       </>

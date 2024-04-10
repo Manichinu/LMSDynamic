@@ -418,7 +418,8 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         this.setState({ EndDate: CompensateMinDate })
 
         const url: any = new URL(window.location.href);
-        const LeaveType = url.searchParams.get("type");
+        // const LeaveType = url.searchParams.get("type");
+        const LeaveType = this.props.leaveType;
         setTimeout(() => {
             if (LeaveType == "TMX001") {
 

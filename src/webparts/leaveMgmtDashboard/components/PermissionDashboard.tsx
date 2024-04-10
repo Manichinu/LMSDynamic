@@ -222,8 +222,8 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
       });
 
 
-  } 
- 
+  }
+
   private async spLoggedInUser(ctx: any) {
     try {
       const web = Web(ctx.pageContext.site.absoluteUrl);
@@ -543,7 +543,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
 
         }
         {this.state.PermissionRequest == true &&
-          <PermissionRequest description={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
+          <PermissionRequest description={''} leaveType={''} context={this.props.context} siteurl={this.props.siteurl} userId={this.props.userId} />
 
         }
       </>

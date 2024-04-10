@@ -4,5 +4,5 @@ export interface ILeaveMgmtDashboardProps {
   context: any;
   siteurl: string;
   userId: any;
-
+  leaveType: string;
 }

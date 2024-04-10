@@ -17,7 +17,7 @@ import { ILeaveMgmtDashboardProps } from './components/ILeaveMgmtDashboardProps'
 
 export interface ILeaveMgmtDashboardWebPartProps {
   description: string;
- 
+  leaveType: string;
 }
 
 export default class LeaveMgmtDashboardWebPart extends BaseClientSideWebPart<ILeaveMgmtDashboardWebPartProps> {
@@ -29,9 +29,10 @@ export default class LeaveMgmtDashboardWebPart extends BaseClientSideWebPart<ILe
         description: this.properties.description,
         context: this.context,
         siteurl: this.context.pageContext.web.absoluteUrl,
-        userId: this.context.pageContext.legacyPageContext["userId"]
-         
-      
+        userId: this.context.pageContext.legacyPageContext["userId"],
+        leaveType: this.properties.leaveType
+
+
       }
     );
 
@@ -47,7 +48,7 @@ export default class LeaveMgmtDashboardWebPart extends BaseClientSideWebPart<ILe
   }
 
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
-  
+
     return {
       pages: [
         {
@@ -61,8 +62,8 @@ export default class LeaveMgmtDashboardWebPart extends BaseClientSideWebPart<ILe
                 PropertyPaneTextField('description', {
                   label: strings.DescriptionFieldLabel
                 })
-              
-               
+
+
               ]
             }
           ]

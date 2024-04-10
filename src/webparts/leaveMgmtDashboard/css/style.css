@@ -608,6 +608,10 @@ div[data-automation-id="CanvasZone"]>div {
     display: none !important;
 }
 
+.leavecount-box {
+    cursor: pointer !important;
+}
+
 #LMSDashboard_wrapper select,
 #LMSDashboard_wrapper input {
     border: 1px solid #cccccc;
