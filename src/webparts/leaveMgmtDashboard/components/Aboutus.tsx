@@ -94,7 +94,7 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
                 <>
                     <div className="accordion-item">
                         <h2 className="accordion-header" id={`headingOne${key}`}>
-                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${key}`} aria-expanded="false" aria-controls={`collapse${key}`}>
+                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${key}`} aria-expanded="false" aria-controls={`collapse${key}`}>
                                 {item.Types}
                             </button>
                         </h2>
