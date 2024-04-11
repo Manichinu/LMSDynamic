@@ -1529,7 +1529,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
             </div>
             <button type="button" id='configure' className="btn btn-primary" onClick={() => this.createAllDynamicLists()} >Click here to Configure</button>
           </div>
-        }
+         }
         <div id='header-section' style={{ display: "none" }}>
           <header>
             <div className="clearfix container-new">
