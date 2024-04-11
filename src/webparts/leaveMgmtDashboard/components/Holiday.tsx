@@ -172,7 +172,7 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
           <div className="dashboard-wrap">
             {this.state.IsAdmin == true &&
 
-              <a href={`${this.props.siteurl}/Lists/HolidayCollection/AllItems.aspx`} className="btn btn-outline leave-req-link " id="submit">View holiday list</a>}
+              <a href={`${this.props.siteurl}/Lists/HolidayCollection/AllItems.aspx`} className="btn btn-outline leave-req-link " target='_blank' id="submit">View holiday list</a>}
             <div className="holiday-page">
               <p> Below is the list of our company’s paid holidays. Our offices will be closed for observance. </p>
               <ul>

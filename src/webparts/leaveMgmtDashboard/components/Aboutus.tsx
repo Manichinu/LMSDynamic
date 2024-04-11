@@ -20,6 +20,8 @@ let NewWeb: any;
 
 export interface AboutusState {
     DatatableItems: any[];
+    IsAdmin: boolean;
+
 }
 
 export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, AboutusState> {
@@ -68,12 +70,15 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
 
         this.state = {
             DatatableItems: [],
+            IsAdmin: false,
+
         };
         NewWeb = Web("" + this.props.siteurl + "")
 
     }
-    public componentDidMount(): void {
+    public async componentDidMount() {
         this.getListItems();
+        await this.CheckManagerPermissionPrivillages()
     }
     public getListItems(): void {
         NewWeb.lists.getByTitle("LeaveTypeCollection").items.select("Types", "Details").get()
@@ -86,6 +91,26 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
                 console.log("Failed to get list items!");
                 console.log(error);
             });
+    }
+    public async CheckManagerPermissionPrivillages() {
+
+
+        let groups = await NewWeb.currentUser.groups();
+        for (var i = 0; i < groups.length; i++) {
+            if (groups[i].Title == 'LMS Admin') {
+
+                this.setState({ IsAdmin: true }); //To enable admin access to Specific Group Users alone      
+
+                break;
+
+            } else {
+                this.setState({ IsAdmin: false });
+
+
+            }
+
+
+        }
     }
     public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
 
@@ -113,6 +138,9 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
             <>
                 <div className="container">
                     <div className="dashboard-wrap">
+                        {this.state.IsAdmin == true &&
+
+                            <a href={`${this.props.siteurl}/Lists/LeaveTypeCollection/AllItems.aspx`} className="btn btn-outline leave-req-link " target='_blank' id="submit">View leave type list</a>}
                         <ul>
                             <li className="li-bold"> About Leave Types</li>
                         </ul>

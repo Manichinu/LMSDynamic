@@ -477,7 +477,7 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
                   </ul>
 
                   {this.state.IsAdmin == true &&
-                    <a href="https://tmxin.sharepoint.com/sites/ER/Lists/EmployeePermission/Approvedlist.aspx" className="btn btn-outline leave-req-link " id="submit">View permission list</a>}
+                    <a href={`${this.props.siteurl}/Lists/EmployeePermission/AllItems.aspx`} className="btn btn-outline leave-req-link" target='_blank' id="submit">View permission list</a>}
                   <button className="btn btn-outline" id="submit" onClick={() => this.showPermissionRequest()}> Permission Request  </button>
                 </div>
 

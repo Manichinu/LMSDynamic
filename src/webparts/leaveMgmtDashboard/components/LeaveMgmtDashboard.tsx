@@ -8,7 +8,7 @@ import 'jquery/dist/jquery.min.js';
 import { _SiteGroups } from '@pnp/sp/site-groups/types';
 import * as MicrosoftGraph from '@microsoft/microsoft-graph-types';
 //Datatable Modules
-
+import "@pnp/sp/site-groups/web";
 import "datatables.net-dt/js/dataTables.dataTables";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "datatables.net";
@@ -298,8 +298,12 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
       await sp.web.siteGroups.add({
         Title: groupName,
         Description: groupDescription
-      });
-
+      }).then(() => {
+        NewWeb.siteGroups.getByName(groupName).users
+          .add("i:0#.f|membership|" + this.state.Empemail + "").then(() => {
+            console.log("User added to the group successfully");
+          });
+      })
       console.log(`Group "${groupName}" created successfully.`);
     } catch (error) {
       console.error("Error:", error);
@@ -487,7 +491,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
         console.log("Error in batch operations for creating " + ListName + " list: " + error);
       });
     })
-  } 
+  }
   public async createHolidayCollectionList() {
     var ListName = "HolidayCollection";
     var batch = NewWeb.createBatch();
@@ -1573,7 +1577,7 @@ export default class LeaveMgmtDashboard extends React.Component<ILeaveMgmtDashbo
                   </ul>
                   {this.state.IsAdmin == true &&
 
-                    <a href="${this.props.siteurl}/Lists/LeaveRequest/Approvedlist.aspx" className="btn btn-outline leave-req-link " id="submit">View leave list</a>
+                    <a href={`${this.props.siteurl}/Lists/LeaveRequest/AllItems.aspx`} target='_blank' className="btn btn-outline leave-req-link " id="submit">View leave list</a>
                   }
                   <button className="btn btn-outline" id="submit" onClick={() => this.showLeaveMgmt()}> New Leave Request  </button>
 
