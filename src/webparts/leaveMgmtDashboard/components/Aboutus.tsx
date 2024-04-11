@@ -87,9 +87,6 @@ export default class Aboutus extends React.Component<ILeaveMgmtDashboardProps, A
                 console.log(error);
             });
     }
-
-
-
     public render(): React.ReactElement<ILeaveMgmtDashboardProps> {
 
         const LeaveTypes: any = this.state.DatatableItems.map((item: any, key: any) => {

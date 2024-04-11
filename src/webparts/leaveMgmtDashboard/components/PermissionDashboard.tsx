@@ -177,7 +177,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     });
 
   }
-
   public GetUserlistitems() {
     var reactHandler = this;
 
@@ -223,7 +222,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
 
 
   }
-
   private async spLoggedInUser(ctx: any) {
     try {
       const web = Web(ctx.pageContext.site.absoluteUrl);
@@ -304,7 +302,6 @@ export default class PermissionDashboard extends React.Component<ILeaveMgmtDashb
     return Usertype;
 
   }
-
   public loadTable() {
 
     ($('#LMSDashboard') as any).DataTable({

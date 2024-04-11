@@ -92,7 +92,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     $("#txt-EndDate").val(finaltime);
     this.setState({ startDate: date });
   }
-
   handleChange(date: moment.MomentInput) {
     var selectedhr: any = $('#ddl-Permissionhr').val();
     var finaltime = moment(date, "DD-MM-YYYY hh:mm A").add(selectedhr, 'hours').format('D-MM-YYYY hh:mm A');
@@ -100,16 +99,12 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     $("#txt-EndDate").val(finaltime);
     this.setState({ startDate: date });
   }
-
   public componentDidMount() {
     this.GetCurrentUserDetails();
   }
-
   public isInArray(PreviousLeaveRequestDates: any, value: string) {
     return (PreviousLeaveRequestDates.find((item: any) => { return item == value }) || []).length > 0;
   }
-
-
   public getDaysBetweenDates(startDate: moment.Moment, endDate: moment.Moment) {
     var now = startDate.clone();
     while (now.isSameOrBefore(endDate)) {
@@ -143,7 +138,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
       }
     });
   }
-
   public GetPreviousPermissionRequestDates(email: any) {
 
     var filterquery = `EmployeeEmail eq '${email}'and Status ne 'Rejected'`
@@ -199,7 +193,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
       }
     });
   }
-
   public Calculatehours() {
     this.clearerror();
     var selectedhr: any = $('#ddl-Permissionhr').val();
@@ -211,7 +204,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     $("#txt-EndDate").val(calculatedtime);
 
   }
-
   public getselectedstarttime(date: any) {
 
     this.setState({ selectedtime: date });
@@ -221,8 +213,7 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     var calculatedtime = moment(selectedtime, "YYYY-MM-DDTHH:mm").add(selectedhr, 'hours').format('D-MM-YYYY hh:mm A');
     $("#txt-EndDate").val(calculatedtime);
 
-  }
-  
+  }  
   public Checkalreadyinleave() {
     let Status = true;
     var selectedtime = this.state.startDate;
@@ -266,7 +257,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
     return Status;
 
   }
-
   public LeaveformValidation() {
 
     var Formstatus = false;
@@ -304,7 +294,6 @@ export default class PermissionRequest extends React.Component<ILeaveMgmtDashboa
 
 
   }
-
   public GetCurrentUserDetails() {
 
     var reacthandler = this;

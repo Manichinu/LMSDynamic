@@ -95,7 +95,6 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
     });
 
   }
-
   public async componentDidMount() {
     const url: any = new URL(window.location.href);
     url.searchParams.get("ItemID");
@@ -107,7 +106,6 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
     await this.CheckManagerPermissionPrivillages();
 
   }
-
   public GetHolidaylist() {
     var reactHandler = this;
     var url = `${this.props.siteurl}/_api/web/lists/getbytitle('HolidayCollection')/items?$select=StartDate,HolidayName&$orderby=StartDate asc`;
@@ -130,7 +128,6 @@ export default class Holiday extends React.Component<ILeaveMgmtDashboardProps, H
       }
     });
   }
-
   public async CheckManagerPermissionPrivillages() {
 
 
