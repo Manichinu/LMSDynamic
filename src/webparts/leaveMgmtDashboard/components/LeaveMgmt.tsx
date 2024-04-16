@@ -412,8 +412,8 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
 
         $('#txt-Startdate').val(today);
         $('#txt-Enddate').val(today);
-        $('#txt-Startdate').attr('min', today);
-        $('#txt-Enddate').attr('min', today);
+        // $('#txt-Startdate').attr('min', today);
+        // $('#txt-Enddate').attr('min', today);
         var CompensateMinDate = moment($("#txt-Enddate").val(), "YYYY-MM-DD").add(1, 'days').format("YYYY-MM-DD")
         this.setState({ EndDate: CompensateMinDate })
 
@@ -1172,7 +1172,7 @@ export default class LeaveMgmt extends React.Component<ILeaveMgmtDashboardProps,
         var Date: any = $("#txt-Startdate").val()
         var EndDate = $("#txt-Enddate").val()
 
-        $('#txt-Enddate').attr('min', Date);
+        // $('#txt-Enddate').attr('min', Date);
         if (moment(Date, "YYYY-MM-DD").isAfter(moment(EndDate, 'YYYY-MM-DD'), 'day')) {
             $('#txt-Enddate').val("")
             this.setState({ dates: [] })
